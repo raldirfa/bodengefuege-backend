@@ -10,6 +10,8 @@ public class Field {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long Id;
 
+    private String name;
+
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
@@ -23,4 +25,21 @@ public class Field {
         this.user = user;
     }
 
+    // Getter
+
+    public long getId() {
+        return Id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Sample> getSamples() {
+        return samples;
+    }
 }

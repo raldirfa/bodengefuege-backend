@@ -16,6 +16,8 @@ public class User {
 
     private String password;
 
+    private String jwtToken;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Setting setting;
 
@@ -29,6 +31,28 @@ public class User {
         this.email = email;
         this.password = password;
         this.setting = new Setting();
+    }
+
+    // Getter
+
+    public long getId() {
+        return Id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public Setting getSetting() {
+        return setting;
     }
 
     public List<Field> getFields() {

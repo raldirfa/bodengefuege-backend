@@ -14,4 +14,15 @@ public class Sample {
 
     public Sample() {
     }
+
+    // Getter
+
+
+    public long getId() {
+        return Id;
+    }
+
+    public Field getField() {
+        return field;
+    }
 }
