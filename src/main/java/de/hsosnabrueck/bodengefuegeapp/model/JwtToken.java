@@ -1,12 +1,13 @@
 package de.hsosnabrueck.bodengefuegeapp.model;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-
 import java.security.Key;
-
-import io.jsonwebtoken.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class JwtToken {
         System.out.println(jwt);
         System.out.println(decodeJWT(jwt));
     }
+
     // The secret key. This should be in a property file NOT under source
     // control and not hard coded in real life. We're putting it here for
     // simplicity.
@@ -40,10 +42,10 @@ public class JwtToken {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
 
-        Map<String, Object> map = new HashMap<>();  
+        Map<String, Object> map = new HashMap<>();
         map.put("user", user);
         map.put("password", password);
-        
+
 
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder()
