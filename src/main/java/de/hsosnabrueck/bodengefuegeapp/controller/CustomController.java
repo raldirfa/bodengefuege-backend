@@ -20,19 +20,17 @@ public class CustomController {
     FieldRepository fieldRepository;
 
 
-    @GetMapping
-    public void test() {
-        User user = new User("name", "pass");
-        Field field = new Field(user);
-        Field field2 = new Field(user);
-        fieldRepository.save(field);
-        fieldRepository.save(field2);
-    }
+    // @GetMapping
+    // public void test() {
+    //     User user = new User("name", "pass");
+    //     Field field = new Field(user);
+    //     Field field2 = new Field(user);
+    //     fieldRepository.save(field);
+    //     fieldRepository.save(field2);
+    // }
 
-    @GetMapping("/test")
-    public void users() {
-        for (User user : userRepository.findAll()) {
-            System.out.println(user.getFields());
-        }
-    }
+    // @GetMapping("/test")
+    // public void users() {
+        
+    // }
 }
