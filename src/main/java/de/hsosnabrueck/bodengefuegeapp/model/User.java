@@ -12,6 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long Id;
 
+    private String username;
+
     private String email;
 
     private String password;
@@ -27,7 +29,8 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password) {
+    public User(String username, String email, String password) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.setting = new Setting();
@@ -37,6 +40,10 @@ public class User {
 
     public long getId() {
         return Id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
