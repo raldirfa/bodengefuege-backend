@@ -1,4 +1,4 @@
-package java.de.hsosnabrueck.bodengefuegeapp.model
+package de.hsosnabrueck.bodengefuegeapp.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

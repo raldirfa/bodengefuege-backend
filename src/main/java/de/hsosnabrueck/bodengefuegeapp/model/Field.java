@@ -1,9 +1,11 @@
-package java.de.hsosnabrueck.bodengefuegeapp.model
+package de.hsosnabrueck.bodengefuegeapp.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import java.util.ArrayList;
 
 // SOURCE(s):
 // https://attacomsian.com/blog/spring-data-jpa-one-to-one-mapping
@@ -20,6 +22,8 @@ public class Field {
     private User user;
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     private List<Sample> sample = new ArrayList<>();
+
+    public Field() {}
 
     public Field(String _name) {
         this.name = _name;
@@ -55,7 +59,6 @@ public class Field {
 
     @Override
     public String toString() {
-        return "Field [id=" + this.id + ", name=" + this.name + 
-                    ", samples=" + this.getSamplesFormatted() + "]";
+        return "Field [id=" + this.id + ", name=" + this.name + ", samples=" + this.getSamplesFormatted() + "]";
     }
 }

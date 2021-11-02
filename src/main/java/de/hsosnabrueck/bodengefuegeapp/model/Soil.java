@@ -1,4 +1,4 @@
-package java.de.hsosnabrueck.bodengefuegeapp.model
+package de.hsosnabrueck.bodengefuegeapp.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,12 +15,14 @@ public class Soil {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String type;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(mappedBy = "soil")
+    private SoilType type;
+    @OneToOne(mappedBy = "sample", fetch = FetchType.LAZY,
+                cascade = CascadeType.ALL)
     private Sample sample;
 
-    public Soil(String _type) {
+    public Soil() {}
+
+    public Soil(SoilType _type) {
         this.type = _type;
     }
 }

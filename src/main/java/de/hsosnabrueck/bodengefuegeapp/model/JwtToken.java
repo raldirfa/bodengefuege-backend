@@ -1,4 +1,4 @@
-package de.hsosnabrueck.bodengefuegeapp.model;
+package hsosnabrueck.bodengefuegeapp.model;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
