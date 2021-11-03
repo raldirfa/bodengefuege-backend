@@ -44,7 +44,7 @@ public class UserController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<String>(createResponse(user), HttpStatus.OK);
+        return new ResponseEntity<String>(createResponseWithToken(user), HttpStatus.OK);
     }
 
     @PostMapping("/registration")
@@ -59,7 +59,7 @@ public class UserController {
         User user = new User(jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
         userRepository.save(user);
 
-        return new ResponseEntity<String>(createResponse(user), HttpStatus.OK);
+        return new ResponseEntity<String>(createResponseWithToken(user), HttpStatus.OK);
         
     }
 
@@ -72,8 +72,9 @@ public class UserController {
         Claims claims = JwtToken.decodeJWT(jwtToken);
         Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
 
-        System.out.println(user.get().getEmail());
-        return new ResponseEntity<String>( HttpStatus.OK);
+
+
+        return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
         
     }
 
@@ -92,23 +93,35 @@ public class UserController {
     //     return new ResponseEntity<String>(HttpStatus.OK);
     //  }
 
-    private String createResponse(User user){
+    private String createResponseWithToken(User user){
         Gson gson = new GsonBuilder().create();
-        Map<String, Object> map = new LinkedHashMap<>();
-        Map<String, Object> map2 = new LinkedHashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();        
 
-        map.put("token", JwtToken.createJWT(issuer, user));
-
-        map2.put("id", user.getId());
-        map2.put("username", user.getUsername());
-        map2.put("email", user.getEmail());
-        map2.put("settings", user.getSetting());
-
-        map.put("user", map2);
-
-
+        map.put("token", JwtToken.createJWT(issuer, user));   
+        map.put("user", createUserMap(user));
         String json = gson.toJson(map);
+
         return json;
+    }
+
+    private String createResponseWithoutToken(User user){
+        Gson gson = new GsonBuilder().create();
+        Map<String, Object> map = new LinkedHashMap<>();        
+   
+        map.put("user", createUserMap(user));
+        String json = gson.toJson(map);
+
+        return json;
+    }
+
+    private Map<String,Object> createUserMap(User user){
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", user.getId());
+        map.put("username", user.getUsername());
+        map.put("email", user.getEmail());
+        map.put("settings", user.getSetting());
+
+        return map;
     }
 
     private User isUserValid(String email, String password){
