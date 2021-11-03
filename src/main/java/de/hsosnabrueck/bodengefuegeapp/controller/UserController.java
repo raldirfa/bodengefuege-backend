@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
 
+import de.hsosnabrueck.bodengefuegeapp.model.Setting;
 import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +65,8 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<String> user() {
-        String jwtToken = "XXeyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+    public ResponseEntity<String> userGet() {
+        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -83,20 +84,38 @@ public class UserController {
         
     }
 
-    //  @PatchMapping("/user")
-    //  public ResponseEntity<String> user(@RequestHeader String jwtToken, @RequestBody Map<String, Object> inputData) {
-    //     if(inputData == null || jwtToken == null){
-    //         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-    //     }
-    //     JSONObject jsonObject = new JSONObject(inputData);
-    //     if(!jsonObject.has("email") || !jsonObject.has("password") || !jsonObject.has("username")){ //ToDo Change
-    //         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-    //     }
+      @PatchMapping("/user")
+      public ResponseEntity<String> userPatch(@RequestBody Map<String, Object> inputData) {
+          Gson gson = new GsonBuilder().create();
+          String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+          if(jwtToken == null){
+              return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+          }
 
-    //     userRepository.findById();
+          if(inputData == null){
+              return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+          }
+          JSONObject jsonObject = new JSONObject(inputData);
+          if(!jsonObject.has("user")){
+              return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+          }
 
-    //     return new ResponseEntity<String>(HttpStatus.OK);
-    //  }
+          try{
+              Claims claims = JwtToken.decodeJWT(jwtToken);
+              User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
+
+              Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+              user.get().setEmail(inputUser.getEmail());
+              user.get().setUsername(inputUser.getUsername());
+              user.get().setSetting(inputUser.getSetting());
+              userRepository.save(user.get());
+
+              return new ResponseEntity<String>(HttpStatus.OK);
+          }
+          catch(Exception e){
+              return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+          }
+      }
 
     private String createResponseWithToken(User user){
         Gson gson = new GsonBuilder().create();

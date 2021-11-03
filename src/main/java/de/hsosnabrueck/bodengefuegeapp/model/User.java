@@ -69,4 +69,16 @@ public class User {
     public List<Field> getFields() {
         return fields;
     }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public void setSetting(Setting setting){
+        this.setting = setting;
+    }
 }
