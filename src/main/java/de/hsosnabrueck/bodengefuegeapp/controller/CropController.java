@@ -48,13 +48,13 @@ public class CropController {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
 
-        map.put("crops", createCropMap(user));
+        map.put("crops", createCropArrayList(user));
         String json = gson.toJson(map);
 
         return json;
     }
 
-    private ArrayList<Map<String,Object>> createCropMap(User user){
+    private ArrayList<Map<String,Object>> createCropArrayList(User user){
         ArrayList<Map<String,Object>> arrayList = new ArrayList<>();
 
         for(Crop c: cropRepository.findAll()){
