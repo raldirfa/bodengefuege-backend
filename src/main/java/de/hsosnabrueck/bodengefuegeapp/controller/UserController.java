@@ -14,7 +14,6 @@ import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 
-import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -59,6 +58,11 @@ public class UserController {
         return createResponse(user);
         
     }
+
+    // @PatchMapping("/user")
+    // public ResponseEntity<String> user(@RequestBody Map<String, Object> inputData) {
+
+    // }
 
     private ResponseEntity<String> createResponse(User user){
         Gson gson = new GsonBuilder().create();
