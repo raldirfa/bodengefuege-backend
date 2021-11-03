@@ -29,7 +29,7 @@ public class UserController {
             return null;
         }
         JSONObject jsonObject = new JSONObject(inputData);
-        if(jsonObject == null){
+        if(!jsonObject.has("email") || !jsonObject.has("password")){
             return null;
         }
         User user = isUserValid(jsonObject.getString("email"),jsonObject.getString("password"));
@@ -42,17 +42,18 @@ public class UserController {
 
     @PostMapping("/registration")
     public String registration(@RequestBody Map<String, Object> inputData) {
-        JSONObject jsonObject = new JSONObject(inputData);
-
-        //ToDo bessere Abfragen
-        if(jsonObject != null){
-            User user = new User(jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
-            userRepository.save(user);
-
-            return createResponseJson(user);
+        if(inputData == null){
+            return null;
         }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("email") || !jsonObject.has("password") || !jsonObject.has("username")){
+            return null;
+        }
+        User user = new User(jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
+        userRepository.save(user);
 
-        return null;
+        return createResponseJson(user);
+        
     }
 
     private String createResponseJson(User user){
