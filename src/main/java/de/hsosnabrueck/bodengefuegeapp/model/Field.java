@@ -12,7 +12,7 @@ public class Field {
 
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
     @OneToMany(mappedBy = "field")

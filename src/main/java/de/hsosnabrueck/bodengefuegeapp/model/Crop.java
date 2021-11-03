@@ -12,5 +12,5 @@ public class Crop {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String type;
+    private String name;
 }
