@@ -65,8 +65,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<String> userGet() {
-        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+    public ResponseEntity<String> userGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -78,6 +77,7 @@ public class UserController {
             return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
         }
         catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
@@ -85,9 +85,9 @@ public class UserController {
     }
 
       @PatchMapping("/user")
-      public ResponseEntity<String> userPatch(@RequestBody Map<String, Object> inputData) {
+      public ResponseEntity<String> userPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData) {
           Gson gson = new GsonBuilder().create();
-          String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+          //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
           if(jwtToken == null){
               return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
           }
@@ -108,6 +108,7 @@ public class UserController {
               Setting inputSetting = gson.fromJson(jsonObjectUser.get("settings").toString(), Setting.class);
 
               Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+
               user.get().setEmail(inputUser.getEmail());
               user.get().setUsername(inputUser.getUsername());
               user.get().setSetting(inputSetting);
@@ -159,5 +160,6 @@ public class UserController {
         }
         return null;
     }
+
 
 }
