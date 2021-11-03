@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long Id;
+    private long Id;
 
     private String email;
 
@@ -20,14 +20,14 @@ public class User {
 
     private String jwtToken;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Setting setting;
 
     @OneToMany(mappedBy = "user")
     private List<Field> fields;
 
     @ManyToMany
-    private List<Crop> crops;
+    private List<Crop> favCrops;
 
     public User() {
     }
