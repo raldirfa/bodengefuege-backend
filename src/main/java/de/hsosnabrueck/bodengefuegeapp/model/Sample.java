@@ -19,6 +19,12 @@ public class Sample {
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     private List<Property> properties;
 
+    @OneToOne
+    private Soil soil;
+
+    @OneToOne
+    private Crop crop;
+
     public Sample() {
     }
 

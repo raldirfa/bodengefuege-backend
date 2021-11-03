@@ -17,6 +17,9 @@ public class Property {
     @ManyToOne()
     private Sample sample;
 
+    @OneToOne
+    private Criteria criteria;
+
     public Property() {
     }
 }
