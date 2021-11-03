@@ -27,7 +27,7 @@ public class UserController {
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
+    public String login(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return null;
         }
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody Map<String, Object> inputData) {
+    public String registration(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return null;
         }
@@ -59,24 +59,36 @@ public class UserController {
         
     }
 
-    // @PatchMapping("/user")
-    // public ResponseEntity<String> user(@RequestBody Map<String, Object> inputData) {
+    //  @PatchMapping("/user")
+    //  public ResponseEntity<String> user(@RequestHeader String jwtToken, @RequestBody Map<String, Object> inputData) {
+    //     if(inputData == null){
+    //         return null;
+    //     }
+    //     JSONObject jsonObject = new JSONObject(inputData);
+    //     if(!jsonObject.has("email") || !jsonObject.has("password") || !jsonObject.has("username")){ //ToDo Change
+    //         return null;
+    //     }
 
-    // }
+    //     userRepository.findById(Long.parseLong(jsonObject.getString("id")));
+    //  }
 
-    private ResponseEntity<String> createResponse(User user){
+    private String createResponse(User user){
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JWT-Token", JwtToken.createJWT(issuer, user));
+        Map<String, Object> map2 = new LinkedHashMap<>();
 
-        map.put("id", user.getId());
-        map.put("username", user.getUsername());
-        map.put("email", user.getEmail());
-        map.put("settings", user.getSetting());
+        map.put("token", JwtToken.createJWT(issuer, user));
+
+        map2.put("id", user.getId());
+        map2.put("username", user.getUsername());
+        map2.put("email", user.getEmail());
+        map2.put("settings", user.getSetting());
+
+        map.put("user", map2);
+        
 
         String json = gson.toJson(map);
-        return new ResponseEntity<String>(json, headers, HttpStatus.CREATED);
+        return json;
     }
 
     private User isUserValid(String email, String password){
