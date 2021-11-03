@@ -104,10 +104,13 @@ public class UserController {
               Claims claims = JwtToken.decodeJWT(jwtToken);
               User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
 
+              JSONObject jsonObjectUser = (JSONObject) jsonObject.get("user");
+              Setting inputSetting = gson.fromJson(jsonObjectUser.get("settings").toString(), Setting.class);
+
               Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
               user.get().setEmail(inputUser.getEmail());
               user.get().setUsername(inputUser.getUsername());
-              user.get().setSetting(inputUser.getSetting());
+              user.get().setSetting(inputSetting);
               userRepository.save(user.get());
 
               return new ResponseEntity<String>(HttpStatus.OK);
