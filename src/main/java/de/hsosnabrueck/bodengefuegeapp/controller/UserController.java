@@ -3,6 +3,8 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 import com.google.gson.Gson;
 
 import com.google.gson.GsonBuilder;
+
+import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -27,49 +31,65 @@ public class UserController {
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
-            return null;
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         JSONObject jsonObject = new JSONObject(inputData);
         if(!jsonObject.has("email") || !jsonObject.has("password")){
-            return null;
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         User user = isUserValid(jsonObject.getString("email"),jsonObject.getString("password"));
         if(user == null){
-            return null;
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-        return createResponse(user);
+        return new ResponseEntity<String>(createResponse(user), HttpStatus.OK);
     }
 
     @PostMapping("/registration")
-    public String registration(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> registration(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
-            return null;
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         JSONObject jsonObject = new JSONObject(inputData);
         if(!jsonObject.has("email") || !jsonObject.has("password") || !jsonObject.has("username")){
-            return null;
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         User user = new User(jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
         userRepository.save(user);
 
-        return createResponse(user);
+        return new ResponseEntity<String>(createResponse(user), HttpStatus.OK);
+        
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<String> user(@RequestHeader String jwtToken) {
+        if(jwtToken == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        Claims claims = JwtToken.decodeJWT(jwtToken);
+        long userId = (long)claims.get("id");
+        Optional<User> user = userRepository.findById(userId);
+
+        System.out.println(user.get().getEmail());
+        return new ResponseEntity<String>( HttpStatus.OK);
         
     }
 
     //  @PatchMapping("/user")
     //  public ResponseEntity<String> user(@RequestHeader String jwtToken, @RequestBody Map<String, Object> inputData) {
-    //     if(inputData == null){
-    //         return null;
+    //     if(inputData == null || jwtToken == null){
+    //         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
     //     }
     //     JSONObject jsonObject = new JSONObject(inputData);
     //     if(!jsonObject.has("email") || !jsonObject.has("password") || !jsonObject.has("username")){ //ToDo Change
-    //         return null;
+    //         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
     //     }
 
-    //     userRepository.findById(Long.parseLong(jsonObject.getString("id")));
+    //     userRepository.findById();
+
+    //     return new ResponseEntity<String>(HttpStatus.OK);
     //  }
 
     private String createResponse(User user){

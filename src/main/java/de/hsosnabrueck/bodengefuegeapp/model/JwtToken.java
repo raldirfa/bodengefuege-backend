@@ -8,7 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 //https://github.com/jwtk/jjwt
@@ -38,7 +38,8 @@ public class JwtToken {
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id",user.getId());
         map.put("user", user.getEmail());
 
 
