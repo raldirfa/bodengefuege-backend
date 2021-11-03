@@ -23,6 +23,8 @@ public class Property {
     public Property() {
     }
 
+    // Getter and Setter
+
     public long getId() {
         return id;
     }

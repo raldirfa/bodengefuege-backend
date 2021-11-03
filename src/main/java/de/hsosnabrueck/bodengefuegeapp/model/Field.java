@@ -18,6 +18,12 @@ public class Field {
     @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Sample> samples;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Grade grade;
+
+    @OneToOne
+    private Soil soil;
+
     public Field() {
     }
 
@@ -25,6 +31,8 @@ public class Field {
         this.name = name;
         this.user = user;
     }
+
+    // Getter and Setter
 
     public long getId() {
         return Id;
@@ -56,5 +64,21 @@ public class Field {
 
     public void setSamples(List<Sample> samples) {
         this.samples = samples;
+    }
+
+    public Grade getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Grade grade) {
+        this.grade = grade;
+    }
+
+    public Soil getSoil() {
+        return soil;
+    }
+
+    public void setSoil(Soil soil) {
+        this.soil = soil;
     }
 }

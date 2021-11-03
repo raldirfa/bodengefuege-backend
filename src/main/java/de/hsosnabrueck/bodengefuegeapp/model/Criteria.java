@@ -18,6 +18,8 @@ public class Criteria {
     public Criteria() {
     }
 
+    // Getter and Setter
+
     public long getId() {
         return id;
     }

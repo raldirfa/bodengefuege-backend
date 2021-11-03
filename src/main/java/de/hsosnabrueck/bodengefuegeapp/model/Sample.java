@@ -20,9 +20,6 @@ public class Sample {
     private List<Property> properties;
 
     @OneToOne
-    private Soil soil;
-
-    @OneToOne
     private Crop crop;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -30,6 +27,8 @@ public class Sample {
 
     public Sample() {
     }
+
+    // Getter and Setter
 
     public long getId() {
         return Id;
@@ -61,14 +60,6 @@ public class Sample {
 
     public void setProperties(List<Property> properties) {
         this.properties = properties;
-    }
-
-    public Soil getSoil() {
-        return soil;
-    }
-
-    public void setSoil(Soil soil) {
-        this.soil = soil;
     }
 
     public Crop getCrop() {

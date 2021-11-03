@@ -44,8 +44,7 @@ public class User {
         this.fields.add(field);
     }
 
-    // Getter
-
+    // Getter and Setter
 
     public Long getId() {
         return Id;

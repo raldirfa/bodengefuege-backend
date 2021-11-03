@@ -15,6 +15,8 @@ public class Crop {
     public Crop() {
     }
 
+    // Getter and Setter
+
     public long getId() {
         return id;
     }

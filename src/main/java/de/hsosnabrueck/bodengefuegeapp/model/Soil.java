@@ -15,6 +15,8 @@ public class Soil {
     public Soil() {
     }
 
+    // Getter and Setter
+
     public long getId() {
         return id;
     }
