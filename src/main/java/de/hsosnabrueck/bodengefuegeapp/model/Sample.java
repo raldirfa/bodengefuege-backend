@@ -8,7 +8,7 @@ import java.util.List;
 public class Sample {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
     @ManyToOne
@@ -16,7 +16,7 @@ public class Sample {
 
     private LocalDateTime date;
 
-    @OneToMany(mappedBy = "sample")
+    @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     private List<Property> properties;
 
     public Sample() {
