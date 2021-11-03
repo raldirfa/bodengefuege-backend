@@ -40,6 +40,10 @@ public class User {
         this.setting = new Setting();
     }
 
+    public void addField(Field field) {
+        this.fields.add(field);
+    }
+
     // Getter
 
 

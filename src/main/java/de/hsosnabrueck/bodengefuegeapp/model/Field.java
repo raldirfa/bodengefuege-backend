@@ -21,7 +21,8 @@ public class Field {
     public Field() {
     }
 
-    public Field(User user) {
+    public Field(String name, User user) {
+        this.name = name;
         this.user = user;
     }
 

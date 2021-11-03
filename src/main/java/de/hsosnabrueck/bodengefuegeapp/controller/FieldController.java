@@ -1,16 +1,9 @@
 package de.hsosnabrueck.bodengefuegeapp.controller;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mysql.cj.result.Field;
-
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
+import java.util.Map;
 
 @RestController
 public class FieldController {
@@ -24,6 +17,14 @@ public class FieldController {
         return "fields";
     }
 
+    @DeleteMapping("/fields")
+    public ResponseEntity delete(@RequestHeader String jwtToken) {
+        if(jwtToken == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok("");
+    }
 
 
 
