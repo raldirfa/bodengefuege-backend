@@ -10,7 +10,7 @@ public class Setting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long Id;
+    private Long Id;
 
     private boolean tutorial;
     private boolean location;
