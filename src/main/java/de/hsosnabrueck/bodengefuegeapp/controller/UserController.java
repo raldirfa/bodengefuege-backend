@@ -28,7 +28,7 @@ public class UserController {
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @PostMapping("/login")
-    public String login(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return null;
         }
@@ -41,11 +41,11 @@ public class UserController {
             return null;
         }
 
-        return createResponseJson(user);
+        return createResponse(user);
     }
 
     @PostMapping("/registration")
-    public String registration(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> registration(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return null;
         }
@@ -56,21 +56,23 @@ public class UserController {
         User user = new User(jsonObject.getString("username"), jsonObject.getString("email"), jsonObject.getString("password"));
         userRepository.save(user);
 
-        return createResponseJson(user);
+        return createResponse(user);
         
     }
 
-    private String createResponseJson(User user){
+    private ResponseEntity<String> createResponse(User user){
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("jwt", JwtToken.createJWT(issuer, user));
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("jwt", JwtToken.createJWT(issuer, user));
+
         map.put("id", user.getId());
         map.put("username", user.getUsername());
         map.put("email", user.getEmail());
         map.put("settings", user.getSetting());
 
         String json = gson.toJson(map);
-        return json;
+        return new ResponseEntity<String>(json, headers, HttpStatus.CREATED);
     }
 
     private User isUserValid(String email, String password){
@@ -82,12 +84,4 @@ public class UserController {
         return null;
     }
 
-
-    @RequestMapping("/handle")
-    public ResponseEntity<String> handle() {
-    
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("MyResponseHeader", "MyValue");
-    return new ResponseEntity<String>("Hello World", headers, HttpStatus.CREATED);
-}
 }
