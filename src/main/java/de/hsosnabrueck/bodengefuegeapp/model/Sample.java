@@ -9,7 +9,7 @@ public class Sample {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long Id;
+    private long Id;
 
     @ManyToOne
     private Field field;

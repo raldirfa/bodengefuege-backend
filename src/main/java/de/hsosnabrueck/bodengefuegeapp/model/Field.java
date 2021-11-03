@@ -8,7 +8,7 @@ public class Field {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long Id;
+    private long Id;
 
     private String name;
 
