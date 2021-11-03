@@ -42,43 +42,68 @@ public class User {
 
     // Getter
 
+
     public Long getId() {
         return Id;
     }
 
-    public String getUsername(){
-        return username;
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getJwtToken() {
         return jwtToken;
     }
 
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+    }
+
     public Setting getSetting() {
         return setting;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 
     public List<Field> getFields() {
         return fields;
     }
 
-    public void setEmail(String email){
-        this.email = email;
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public List<Crop> getFavCrops() {
+        return favCrops;
     }
 
-    public void setSetting(Setting setting){
-        this.setting = setting;
+    public void setFavCrops(List<Crop> favCrops) {
+        this.favCrops = favCrops;
     }
 }
