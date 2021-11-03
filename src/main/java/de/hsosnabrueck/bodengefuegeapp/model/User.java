@@ -23,10 +23,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private Setting setting;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Field> fields;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Crop> favCrops;
 
     public User() {

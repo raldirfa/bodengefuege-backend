@@ -7,7 +7,7 @@ import java.util.List;
 public class Field {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
     private String name;
@@ -15,7 +15,7 @@ public class Field {
     @ManyToOne
     private User user;
 
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Sample> samples;
 
     public Field() {
