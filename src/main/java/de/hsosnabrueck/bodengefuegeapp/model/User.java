@@ -9,8 +9,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long Id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
 
     private String email;
 
@@ -20,7 +20,7 @@ public class User {
 
     private String jwtToken;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Setting setting;
 
     @OneToMany(mappedBy = "user")
@@ -41,7 +41,7 @@ public class User {
 
     // Getter
 
-    public long getId() {
+    public Long getId() {
         return Id;
     }
 

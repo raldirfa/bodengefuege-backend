@@ -64,7 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<String> user(@RequestHeader String jwtToken) {
+    public ResponseEntity<String> user() {
+        String jwtToken = "hkj";
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -105,7 +106,7 @@ public class UserController {
         map2.put("settings", user.getSetting());
 
         map.put("user", map2);
-        
+
 
         String json = gson.toJson(map);
         return json;
