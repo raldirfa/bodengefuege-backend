@@ -10,9 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long Id;
-
-    private String username;
+    private Long Id;
 
     private String email;
 
@@ -26,11 +24,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Field> fields;
 
+    @ManyToMany
+    private List<Crop> crops;
+
     public User() {
     }
 
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
         this.setting = new Setting();
@@ -40,10 +40,6 @@ public class User {
 
     public long getId() {
         return Id;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getEmail() {
