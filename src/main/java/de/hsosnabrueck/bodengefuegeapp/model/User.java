@@ -40,8 +40,11 @@ public class User {
         this.setting = new Setting();
     }
 
-    // Getter
+    public void addField(Field field) {
+        this.fields.add(field);
+    }
 
+    // Getter and Setter
 
     public Long getId() {
         return Id;

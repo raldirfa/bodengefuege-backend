@@ -19,6 +19,8 @@ public class Setting {
     public Setting() {
     }
 
+    // Getter and Setter
+
     public long getId() {
         return Id;
     }

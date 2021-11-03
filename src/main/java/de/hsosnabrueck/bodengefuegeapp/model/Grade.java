@@ -22,6 +22,8 @@ public class Grade {
         this.latitude = _latitude;
     }
 
+    // Getter and Setter
+
     public long getId() {
         return id;
     }
