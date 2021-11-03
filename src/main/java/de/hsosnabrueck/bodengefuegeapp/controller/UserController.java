@@ -64,7 +64,7 @@ public class UserController {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("jwt", JwtToken.createJWT(issuer, user));
+        headers.set("JWT-Token", JwtToken.createJWT(issuer, user));
 
         map.put("id", user.getId());
         map.put("username", user.getUsername());
