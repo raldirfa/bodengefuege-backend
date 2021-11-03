@@ -1,15 +1,13 @@
 package de.hsosnabrueck.bodengefuegeapp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@SequenceGenerator(name="cropSeq")
 public class Crop {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "cropSeq")
     private long id;
 
     private String name;

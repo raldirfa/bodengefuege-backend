@@ -6,10 +6,11 @@ import java.util.List;
 // https://thorben-janssen.com/key-jpa-hibernate-annotations/#ManyToOne_and_OneToMany
 
 @Entity
+@SequenceGenerator(name="userSeq")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "userSeq")
     private Long Id;
 
     private String email;
