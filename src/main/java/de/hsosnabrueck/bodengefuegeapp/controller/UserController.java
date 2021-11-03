@@ -5,12 +5,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,7 +28,7 @@ public class UserController {
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @PostMapping("/login")
-    public String signIn(@RequestBody Map<String, Object> inputData) {
+    public String login(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return null;
         }
@@ -77,4 +81,13 @@ public class UserController {
         }
         return null;
     }
+
+
+    @RequestMapping("/handle")
+    public ResponseEntity<String> handle() {
+    
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("MyResponseHeader", "MyValue");
+    return new ResponseEntity<String>("Hello World", headers, HttpStatus.CREATED);
+}
 }
