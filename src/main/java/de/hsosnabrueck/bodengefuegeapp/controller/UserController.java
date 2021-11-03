@@ -65,16 +65,21 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<String> user() {
-        String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+        String jwtToken = "XXeyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        Claims claims = JwtToken.decodeJWT(jwtToken);
-        Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+        try{
+            Claims claims = JwtToken.decodeJWT(jwtToken);
 
+            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
 
+            return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
         
     }
 
