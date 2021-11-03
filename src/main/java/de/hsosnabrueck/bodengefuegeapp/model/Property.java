@@ -22,4 +22,44 @@ public class Property {
 
     public Property() {
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public Sample getSample() {
+        return sample;
+    }
+
+    public void setSample(Sample sample) {
+        this.sample = sample;
+    }
+
+    public Criteria getCriteria() {
+        return criteria;
+    }
+
+    public void setCriteria(Criteria criteria) {
+        this.criteria = criteria;
+    }
 }

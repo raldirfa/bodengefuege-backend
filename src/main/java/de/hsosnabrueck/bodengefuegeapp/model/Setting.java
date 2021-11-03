@@ -19,4 +19,35 @@ public class Setting {
     public Setting() {
     }
 
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
+
+    public boolean isTutorial() {
+        return tutorial;
+    }
+
+    public void setTutorial(boolean tutorial) {
+        this.tutorial = tutorial;
+    }
+
+    public boolean isLocation() {
+        return location;
+    }
+
+    public void setLocation(boolean location) {
+        this.location = location;
+    }
+
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
 }
