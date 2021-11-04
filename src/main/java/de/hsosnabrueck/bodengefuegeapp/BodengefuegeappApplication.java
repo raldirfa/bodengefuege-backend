@@ -8,6 +8,7 @@ public class BodengefuegeappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BodengefuegeappApplication.class, args);
+		
 	}
 
 }
