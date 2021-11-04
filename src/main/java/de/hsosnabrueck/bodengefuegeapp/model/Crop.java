@@ -15,6 +15,10 @@ public class Crop {
     public Crop() {
     }
 
+    public Crop(String name) {
+        this.name = name;
+    }
+
     // Getter and Setter
 
     public long getId() {
