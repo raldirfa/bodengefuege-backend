@@ -96,11 +96,6 @@ public class FieldController {
     private ArrayList<Map<String, Object>> createFieldsArrayList(User user) {
         ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
 
-        //ToDo: Delte Map2 - DEMO
-        Map<String, Object> map2 = new LinkedHashMap<>();
-        map2.put("id", 1);
-        map2.put("name", "testName");
-        arrayList.add(map2);
         for (Field f : user.getFields()) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("id", f.getId());
