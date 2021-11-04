@@ -2,11 +2,9 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.Setting;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,14 +13,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
 public class UserController {
 
-    @Autowired
-    UserRepository userRepository;    
+    final UserRepository userRepository;
+
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {

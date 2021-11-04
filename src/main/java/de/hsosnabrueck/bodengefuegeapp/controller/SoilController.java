@@ -1,30 +1,32 @@
 package de.hsosnabrueck.bodengefuegeapp.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import de.hsosnabrueck.bodengefuegeapp.model.Soil;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.SoilRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 public class SoilController {
     
-    @Autowired
-    UserRepository userRepository; 
+    final UserRepository userRepository;
+    final SoilRepository soilRepository;
 
-    @Autowired
-    SoilRepository soilRepository;
+    public SoilController(UserRepository userRepository, SoilRepository soilRepository) {
+        this.userRepository = userRepository;
+        this.soilRepository = soilRepository;
+    }
 
     @GetMapping("/soils")
     public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {

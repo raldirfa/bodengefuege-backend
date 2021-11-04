@@ -1,7 +1,5 @@
 package de.hsosnabrueck.bodengefuegeapp.dto;
 
-import de.hsosnabrueck.bodengefuegeapp.model.Crop;
-import de.hsosnabrueck.bodengefuegeapp.model.Field;
 import de.hsosnabrueck.bodengefuegeapp.model.Grade;
 import de.hsosnabrueck.bodengefuegeapp.model.Property;
 

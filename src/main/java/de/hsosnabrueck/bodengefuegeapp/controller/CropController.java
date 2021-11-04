@@ -22,10 +22,13 @@ import java.util.*;
 @RestController
 public class CropController {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CropRepository cropRepository;
+    final UserRepository userRepository;
+    final CropRepository cropRepository;
+
+    public CropController(UserRepository userRepository, CropRepository cropRepository) {
+        this.userRepository = userRepository;
+        this.cropRepository = cropRepository;
+    }
 
     @GetMapping("/crops")
     public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {

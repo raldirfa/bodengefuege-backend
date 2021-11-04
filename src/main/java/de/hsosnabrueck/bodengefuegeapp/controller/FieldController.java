@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
 import de.hsosnabrueck.bodengefuegeapp.model.*;
 import de.hsosnabrueck.bodengefuegeapp.repository.*;
-import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,28 +14,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 public class FieldController {
 
-    @Autowired
-    FieldRepository fieldRepository;
-
-    @Autowired
-    SampleRepository sampleRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    CropRepository cropRepository;
+    final FieldRepository fieldRepository;
+    final SampleRepository sampleRepository;
+    final UserRepository userRepository;
+    final CropRepository cropRepository;
 
     @Autowired
     SoilRepository soilRepository;
 
 
     private String issuer = "de.hsosnabrueck.bodengefuege";
+
+    public FieldController(FieldRepository fieldRepository, SampleRepository sampleRepository, UserRepository userRepository, CropRepository cropRepository) {
+        this.fieldRepository = fieldRepository;
+        this.sampleRepository = sampleRepository;
+        this.userRepository = userRepository;
+        this.cropRepository = cropRepository;
+    }
 
     @GetMapping("/fields")
     public ResponseEntity<String> fieldsGet(@RequestHeader("token") String jwtToken) {
