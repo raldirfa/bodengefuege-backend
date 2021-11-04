@@ -15,6 +15,10 @@ public class Soil {
     public Soil() {
     }
 
+    public Soil(String name) {
+        this.name = name;
+    }
+
     // Getter and Setter
 
     public long getId() {
