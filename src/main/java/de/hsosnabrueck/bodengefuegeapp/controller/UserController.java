@@ -63,7 +63,7 @@ public class UserController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{           
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
             return new ResponseEntity<String>(createResponseWithoutToken(user), HttpStatus.OK);
         }
