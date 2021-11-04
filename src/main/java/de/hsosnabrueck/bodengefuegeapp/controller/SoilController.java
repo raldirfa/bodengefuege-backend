@@ -27,7 +27,7 @@ public class SoilController {
         this.soilRepository = soilRepository;
     }
 
-    @GetMapping(value = "/soils", produces = "application/json")
+    @GetMapping(value = "/soils", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> soilsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

@@ -36,7 +36,7 @@ public class FieldController {
         this.soilRepository = soilRepository;
     }
 
-    @GetMapping(value = "/fields", produces = "application/json")
+    @GetMapping(value = "/fields", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> fieldsGet(@RequestHeader("token") String jwtToken) {
 
         if (jwtToken == null) {

@@ -23,7 +23,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping(value = "/login", produces = "application/json")
+    @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> loginPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -40,7 +40,7 @@ public class UserController {
         return new ResponseEntity<String>(createResponseWithToken(user), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/registration", produces = "application/json")
+    @PostMapping(value = "/registration", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> registrationPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -56,7 +56,7 @@ public class UserController {
         
     }
 
-    @GetMapping(value = "/user", produces = "application/json")
+    @GetMapping(value = "/user", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> userGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
