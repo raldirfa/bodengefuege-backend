@@ -3,10 +3,8 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
-import de.hsosnabrueck.bodengefuegeapp.model.Field;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
-import de.hsosnabrueck.bodengefuegeapp.model.Sample;
-import de.hsosnabrueck.bodengefuegeapp.model.User;
+import de.hsosnabrueck.bodengefuegeapp.model.*;
+import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.FieldRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.SampleRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
@@ -33,6 +31,9 @@ public class FieldController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    CropRepository cropRepository;
+
 
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
@@ -57,13 +58,15 @@ public class FieldController {
     }
 
     @PostMapping("/fields/{fieldId}/samples")
-    public ResponseEntity addSample(@RequestHeader String jwtToken, @RequestBody SampleDto sampleDto) {
+    public ResponseEntity addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
         if (jwtToken == null) {
             return ResponseEntity.badRequest().build();
         }
 
         // TODO map dto into sample
-        Sample sample = new Sample(sampleDto.getField(), sampleDto.getDate(), sampleDto.getProperties(), sampleDto.getCrop(), sampleDto.getGrade());
+        Field field = fieldRepository.findById(fieldId).get();
+        Crop crop = cropRepository.findById(sampleDto.getCrop()).get();
+        Sample sample = new Sample(field, sampleDto.getDate(), sampleDto.getProperties(), crop, sampleDto.getGrade());
 
         sampleRepository.save(sample);
 
@@ -71,7 +74,7 @@ public class FieldController {
     }
 
     @DeleteMapping("/fields/{fieldId}/samples/{sampleId}")
-    public ResponseEntity delete(@RequestHeader String jwtToken, @PathVariable long fieldId, @PathVariable long sampleId) {
+    public ResponseEntity deleteSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @PathVariable long sampleId) {
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }

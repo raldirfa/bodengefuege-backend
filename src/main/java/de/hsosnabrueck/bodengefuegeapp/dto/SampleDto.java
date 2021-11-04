@@ -9,20 +9,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class SampleDto {
-    private Field field;
+    private long field;
     private LocalDateTime date;
     private List<Property> properties;
-    private Crop crop;
+    private long crop;
     private Grade grade;
 
     public SampleDto() {
     }
 
-    public Field getField() {
+    public long getField() {
         return field;
     }
 
-    public void setField(Field field) {
+    public void setField(long field) {
         this.field = field;
     }
 
@@ -42,11 +42,11 @@ public class SampleDto {
         this.properties = properties;
     }
 
-    public Crop getCrop() {
+    public long getCrop() {
         return crop;
     }
 
-    public void setCrop(Crop crop) {
+    public void setCrop(long crop) {
         this.crop = crop;
     }
 
