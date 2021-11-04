@@ -126,6 +126,22 @@ public class FieldController {
         }
     }
 
+    @DeleteMapping("/fields/{fieldId}")
+    public ResponseEntity fieldsDelete(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
+        Gson gson = new GsonBuilder().create();
+        if (jwtToken == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }       
+        try {
+            fieldRepository.deleteById(fieldId);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/fields/{fieldId}/samples")
     public ResponseEntity addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
         if (jwtToken == null) {
