@@ -87,20 +87,21 @@ public class DatabaseInit {
             Field field = new Field("TestField", user, new Grade(24.5, 42.42), soil);
             fieldRepository.save(field);
 
-            List<Property> properties = new ArrayList<>();
-            properties.add(new Property(1, null, null, "Struktur der Oberfläche"));
-            properties.add(new Property(2, null, null, "Durchwurzelung des Bodens"));
-            properties.add(new Property(3, null, null, "Makroporen/Bioporen"));
-            properties.add(new Property(4, null, null, "Gefüge und Verfestigungen"));
-            properties.add(new Property(5, null, null, "Organische Reststoffe"));
-            properties.add(new Property(4, null, null, "Farbe und Geruch"));
-
             Crop crop = new Crop();
             for (Crop c : cropRepository.findAll()) {
                 crop = c;
             }
 
-            Sample sample = new Sample(field, LocalDateTime.now(), properties, crop, new Grade(24.5, 42.42));
+            Sample sample = new Sample(field, LocalDateTime.now(), null, crop, new Grade(24.5, 42.42));
+
+            List<Property> properties = new ArrayList<>();
+            properties.add(new Property(1, null, sample, "Struktur der Oberfläche"));
+            properties.add(new Property(2, null, sample, "Durchwurzelung des Bodens"));
+            properties.add(new Property(3, null, sample, "Makroporen/Bioporen"));
+            properties.add(new Property(4, null, sample, "Gefüge und Verfestigungen"));
+            properties.add(new Property(5, null, sample, "Organische Reststoffe"));
+            properties.add(new Property(4, null, sample, "Farbe und Geruch"));
+
             sampleRepository.save(sample);
         }
     }
