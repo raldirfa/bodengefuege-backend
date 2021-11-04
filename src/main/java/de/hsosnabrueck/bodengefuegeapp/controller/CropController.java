@@ -24,7 +24,7 @@ public class CropController {
         this.cropRepository = cropRepository;
     }
 
-    @GetMapping(value= "/crops", produces = "application/json")
+    @GetMapping(value= "/crops", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
