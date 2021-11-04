@@ -80,7 +80,7 @@ public class UserController {
       @PatchMapping("/user")
       public ResponseEntity<String> userPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData) {
           Gson gson = new GsonBuilder().create();
-          //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+          
           if(jwtToken == null){
               return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
           }

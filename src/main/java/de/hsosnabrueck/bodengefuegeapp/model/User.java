@@ -112,4 +112,5 @@ public class User {
     public void setFavCrops(List<Crop> favCrops) {
         this.favCrops = favCrops;
     }
+
 }

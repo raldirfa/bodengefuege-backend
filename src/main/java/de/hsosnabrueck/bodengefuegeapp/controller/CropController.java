@@ -9,6 +9,7 @@ import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 
+import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,6 @@ public class CropController {
     public ResponseEntity<String> cropsPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData)
     {
         Gson gson = new GsonBuilder().create();
-        //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -62,12 +62,14 @@ public class CropController {
         }
 
         try{
-            Claims claims = JwtToken.decodeJWT(jwtToken);
-            User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
-            List<Crop> crops = inputUser.getFavCrops();
+            User user = getUserFromToken(jwtToken);
+            List<Crop> crops = user.getFavCrops();
+            
+            System.out.println(inputData);
+            System.out.println(crops);
 
-
-
+            //updateFavCrops(crops, inputData);
+            
             return new ResponseEntity<String>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -75,8 +77,10 @@ public class CropController {
         }
     }
 
-    private void updateFavCrops(List<Crop> crops){
-        
+    private void updateFavCrops(List<Crop> crops, JSONObject inputData){
+        for(Crop c : crops){
+
+        }
     }
 
     private String createResponse(User user){
@@ -114,6 +118,15 @@ public class CropController {
             }
         }
         return false;
+    }
+
+    private User getUserFromToken(String jwtToken){
+        for(User u: userRepository.findAll()){
+            if(u.getJwtToken().equals(jwtToken)){
+                return u;
+            }
+        }
+        return null;
     }
 
 }
