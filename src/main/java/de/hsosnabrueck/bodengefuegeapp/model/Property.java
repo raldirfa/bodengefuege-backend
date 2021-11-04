@@ -17,8 +17,7 @@ public class Property {
     @ManyToOne()
     private Sample sample;
 
-    @OneToOne
-    private Criteria criteria;
+    private String criteria;
 
     public Property() {
     }
@@ -57,11 +56,11 @@ public class Property {
         this.sample = sample;
     }
 
-    public Criteria getCriteria() {
+    public String getCriteria() {
         return criteria;
     }
 
-    public void setCriteria(Criteria criteria) {
+    public void setCriteria(String criteria) {
         this.criteria = criteria;
     }
 }
