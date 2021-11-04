@@ -151,7 +151,7 @@ public class FieldController {
             for (Sample sample : field.getSamples()) {
                 List<PropertyDto> propertyDtos = new ArrayList<>();
                 for (Property property : sample.getProperties()) {
-                    propertyDtos.add(new PropertyDto(property.getRating(), property.getImage(), property.getCriteria()));
+                    propertyDtos.add(new PropertyDto(property.getId(), property.getRating(), property.getImage(), property.getCriteria()));
                 }
                 sampleDtos.add(new SampleDto(sample.getDate(), propertyDtos, sample.getCrop(), sample.getGrade().getLongitude(), sample.getGrade().getLatitude()));
             }
@@ -171,8 +171,12 @@ public class FieldController {
 
         Field field = fieldRepository.findById(fieldId).get();
         List<Property> properties = new ArrayList<>();
-        for (PropertyDto propertyDto : sampleDto.getProperties()) {
-            properties.add(new Property(propertyDto.getRating(), propertyDto.getImage(), null, propertyDto.getCriteria()));
+
+        List<PropertyDto> propertyDtos = sampleDto.getProperties();
+        if (propertyDtos != null) {
+            for (PropertyDto propertyDto : propertyDtos) {
+                properties.add(new Property(propertyDto.getRating(), propertyDto.getImage(), null, propertyDto.getCriteria()));
+            }
         }
 
         Sample sample = new Sample(field, sampleDto.getLocalDateTime(), properties, sampleDto.getCrop(), new Grade(sampleDto.getLng(), sampleDto.getLat()));

@@ -1,6 +1,7 @@
 package de.hsosnabrueck.bodengefuegeapp.dto;
 
 public class PropertyDto {
+    private long id;
     private int rating;
     private byte[] image;
     private String criteria;
@@ -8,7 +9,8 @@ public class PropertyDto {
     public PropertyDto() {
     }
 
-    public PropertyDto(int rating, byte[] image, String criteria) {
+    public PropertyDto(long id, int rating, byte[] image, String criteria) {
+        this.id = id;
         this.rating = rating;
         this.image = image;
         this.criteria = criteria;
@@ -16,6 +18,14 @@ public class PropertyDto {
 
     public int getRating() {
         return rating;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setRating(int rating) {
