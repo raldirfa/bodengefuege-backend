@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
 import de.hsosnabrueck.bodengefuegeapp.model.*;
-import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
-import de.hsosnabrueck.bodengefuegeapp.repository.FieldRepository;
-import de.hsosnabrueck.bodengefuegeapp.repository.SampleRepository;
-import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
+import de.hsosnabrueck.bodengefuegeapp.repository.*;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,9 @@ public class FieldController {
     @Autowired
     CropRepository cropRepository;
 
+    @Autowired
+    SoilRepository soilRepository;
+
 
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
@@ -58,7 +58,7 @@ public class FieldController {
 
     @PostMapping("/fields")
     public ResponseEntity<String> fieldsPost(@RequestHeader("token") String jwtToken, @RequestBody Map<String,Object> inputData) {
-
+        Gson gson = new GsonBuilder().create();
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -73,8 +73,10 @@ public class FieldController {
             JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
             User user = getUserFromToken(jwtToken);
             Field field = new Field(jsonObjectField.get("name").toString(), user);
-            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()) );
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
+            Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
             field.setGrade(grade);
+            field.setSoil(soil);
             if(user.getFields() == null){
                 ArrayList<Field> arrayList = new ArrayList<>();
                 arrayList.add(field);
