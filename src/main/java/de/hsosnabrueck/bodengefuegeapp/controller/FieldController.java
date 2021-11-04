@@ -142,12 +142,13 @@ public class FieldController {
     }
 
     @GetMapping("/fields/{fieldId}/samples")
-    public ResponseEntity<List<SampleDto>> getSamples(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
+    public ResponseEntity<Map<String,Object>> getSamples(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
         if (jwtToken == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        Map<String,Object> map = new LinkedHashMap<>();
         List<SampleDto> sampleDtos = new ArrayList<>();
+
         fieldRepository.findById(fieldId).ifPresent(field -> {
             for (Sample sample : field.getSamples()) {
                 List<PropertyDto> propertyDtos = new ArrayList<>();
@@ -158,7 +159,9 @@ public class FieldController {
             }
         });
 
-        return new ResponseEntity<>(sampleDtos, HttpStatus.OK);
+        map.put("samples", sampleDtos);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 
