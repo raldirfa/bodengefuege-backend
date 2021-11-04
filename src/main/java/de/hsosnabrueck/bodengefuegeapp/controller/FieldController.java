@@ -72,10 +72,17 @@ public class FieldController {
         try {
             JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
             User user = getUserFromToken(jwtToken);
-            Field field = new Field(jsonObject.get("name").toString(), user);
-            Grade grade = new Grade(Double.parseDouble(jsonObject.get("lng").toString()),Double.parseDouble(jsonObject.get("lat").toString()) );
+            Field field = new Field(jsonObjectField.get("name").toString(), user);
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()) );
             field.setGrade(grade);
-            user.getFields().add(field);
+            if(user.getFields() == null){
+                ArrayList<Field> arrayList = new ArrayList<>();
+                arrayList.add(field);
+                user.setFields(arrayList);
+            }
+            else{
+                user.getFields().add(field);
+            }
             userRepository.save(user);
 
             return new ResponseEntity<String>( HttpStatus.OK);
