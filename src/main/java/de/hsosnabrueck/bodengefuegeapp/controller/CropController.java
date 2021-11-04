@@ -8,12 +8,12 @@ import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -26,7 +26,7 @@ public class CropController {
     CropRepository cropRepository;
 
     @GetMapping("/crops")
-    public ResponseEntity<String> userGet(@RequestHeader("token") String jwtToken) {
+    public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -42,6 +42,41 @@ public class CropController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PatchMapping("/crops")
+    public ResponseEntity<String> cropsPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData)
+    {
+        Gson gson = new GsonBuilder().create();
+        //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+        if(jwtToken == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("crops")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            Claims claims = JwtToken.decodeJWT(jwtToken);
+            User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
+            List<Crop> crops = inputUser.getFavCrops();
+
+
+
+            return new ResponseEntity<String>(HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void updateFavCrops(List<Crop> crops){
+        
     }
 
     private String createResponse(User user){

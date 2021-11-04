@@ -9,6 +9,8 @@ import java.util.List;
 @SequenceGenerator(name="userSeq")
 public class User {
 
+    private String issuer = "de.hsosnabrueck.bodengefuege";
+
     @Id
     @GeneratedValue(generator = "userSeq")
     private Long Id;
@@ -37,6 +39,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.jwtToken = JwtToken.createJWT(issuer, this);
         this.setting = new Setting();
     }
 

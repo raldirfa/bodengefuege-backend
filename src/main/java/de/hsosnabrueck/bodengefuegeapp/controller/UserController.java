@@ -27,9 +27,7 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
-
-    private String issuer = "de.hsosnabrueck.bodengefuege";
+    UserRepository userRepository;    
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
@@ -125,7 +123,7 @@ public class UserController {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();        
 
-        map.put("token", JwtToken.createJWT(issuer, user));   
+        map.put("token", user.getJwtToken());   
         map.put("user", createUserMap(user));
         String json = gson.toJson(map);
 
