@@ -97,7 +97,7 @@ public class UserController {
               JSONObject jsonObjectUser = (JSONObject) jsonObject.get("user");
               Setting inputSetting = gson.fromJson(jsonObjectUser.get("settings").toString(), Setting.class);
 
-              User user = getUserFromToken(jwtToken);
+              User user = userRepository.getUserFromToken(jwtToken);
 
               user.setEmail(inputUser.getEmail());
               user.setUsername(inputUser.getUsername());
@@ -150,13 +150,5 @@ public class UserController {
         }
         return null;
     }
-
-    private User getUserFromToken(String jwtToken){
-        for(User u: userRepository.findAll()){
-            if(u.getJwtToken().equals(jwtToken)){
-                return u;
-            }
-        }
-        return null;
-    }
+    
 }

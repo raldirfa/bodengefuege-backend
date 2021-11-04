@@ -36,7 +36,7 @@ public class CropController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
             return new ResponseEntity<String>(createResponse(user),HttpStatus.OK);
         }
@@ -65,7 +65,7 @@ public class CropController {
         }
 
         try{
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
             List<Crop> cropsList = user.getFavCrops();
             JSONObject jsonObjectCrop = (JSONObject) jsonObject.get("crop");
             Optional<Crop> c = cropRepository.findById(Long.parseLong(jsonObjectCrop.get("id").toString()));
@@ -139,14 +139,4 @@ public class CropController {
         }
         return false;
     }
-
-    private User getUserFromToken(String jwtToken){
-        for(User u: userRepository.findAll()){
-            if(u.getJwtToken().equals(jwtToken)){
-                return u;
-            }
-        }
-        return null;
-    }
-
 }

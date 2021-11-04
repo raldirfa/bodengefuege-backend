@@ -34,7 +34,7 @@ public class SoilController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
             return new ResponseEntity<String>(createResponse(user),HttpStatus.OK);
         }
@@ -66,13 +66,5 @@ public class SoilController {
         }
         return arrayList;
     }
-
-    private User getUserFromToken(String jwtToken){
-        for(User u: userRepository.findAll()){
-            if(u.getJwtToken().equals(jwtToken)){
-                return u;
-            }
-        }
-        return null;
-    }
+   
 }

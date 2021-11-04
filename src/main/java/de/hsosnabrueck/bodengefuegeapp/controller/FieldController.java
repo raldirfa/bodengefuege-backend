@@ -44,7 +44,7 @@ public class FieldController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try {
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
             return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
         } catch (Exception e) {
@@ -70,7 +70,7 @@ public class FieldController {
         }
         try {
             JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
             Field field = new Field(jsonObjectField.get("name").toString(), user);
             Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
             Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
@@ -110,7 +110,7 @@ public class FieldController {
         try {
             JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
             Optional<Field> field = fieldRepository.findById(Long.parseLong(jsonObjectField.get("id").toString()));
-            User user = getUserFromToken(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
             field.get().setName(jsonObjectField.get("name").toString());
             Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
             field.get().setSoil(soil);
@@ -195,14 +195,6 @@ public class FieldController {
 
         return arrayList;
     }
-
-    private User getUserFromToken(String jwtToken){
-        for(User u: userRepository.findAll()){
-            if(u.getJwtToken().equals(jwtToken)){
-                return u;
-            }
-        }
-        return null;
-    }
+   
 
 }
