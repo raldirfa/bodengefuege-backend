@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
@@ -54,20 +55,32 @@ public class CropController {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
+
         JSONObject jsonObject = new JSONObject(inputData);
-        if(!jsonObject.has("crops")){
+        if(!jsonObject.has("crop")){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
         try{
             User user = getUserFromToken(jwtToken);
             List<Crop> cropsList = user.getFavCrops();
-            JSONObject crops = new JSONObject(inputData);
-            
-            System.out.println(cropsList);
-            System.out.println(crops);
+            JSONObject jsonObjectCrop = (JSONObject) jsonObject.get("crop");
+            Optional<Crop> c = cropRepository.findById(Long.parseLong(jsonObjectCrop.get("id").toString()));
 
-            updateFavCrops(cropsList, crops);
+            if(cropsList == null || cropsList.isEmpty()){
+                cropsList = new ArrayList<>();
+                cropsList.add(c.get());
+                user.getFavCrops().add(c.get());
+
+
+            }
+            else{
+                System.out.println("l");
+                System.out.println(user.getFavCrops());
+                updateFavCrops(cropsList, jsonObjectCrop);
+                System.out.println(user.getFavCrops());
+            }
+
             
             return new ResponseEntity<String>(HttpStatus.OK);
         }
@@ -76,10 +89,13 @@ public class CropController {
         }
     }
 
-    private void updateFavCrops(List<Crop> cropsList, JSONObject crops){
+    private void updateFavCrops(List<Crop> cropsList, JSONObject crop){
+        System.out.println("j");
         for(Crop c : cropsList){
-            if(c.getId() == Integer.parseInt(crops.getString("id"))){
-                System.out.println(c.getId() + " getid");
+            System.out.println("c: " + c);
+            System.out.println("c1: " + crop);
+            if(c.getId() == Integer.parseInt(crop.getString("id"))){
+
             }
         }
     }
