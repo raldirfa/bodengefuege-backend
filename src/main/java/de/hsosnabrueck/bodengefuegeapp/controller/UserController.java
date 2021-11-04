@@ -63,11 +63,10 @@ public class UserController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+           
+            User user = getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
-
-            return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
+            return new ResponseEntity<String>(createResponseWithoutToken(user), HttpStatus.OK);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -154,5 +153,12 @@ public class UserController {
         return null;
     }
 
-
+    private User getUserFromToken(String jwtToken){
+        for(User u: userRepository.findAll()){
+            if(u.getJwtToken().equals(jwtToken)){
+                return u;
+            }
+        }
+        return null;
+    }
 }
