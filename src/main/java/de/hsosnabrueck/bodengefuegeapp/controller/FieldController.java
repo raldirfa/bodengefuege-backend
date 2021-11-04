@@ -48,7 +48,7 @@ public class FieldController {
 
             return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
@@ -88,7 +88,7 @@ public class FieldController {
 
             return new ResponseEntity<String>( HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
@@ -121,7 +121,7 @@ public class FieldController {
 
             return new ResponseEntity<String>( HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -137,7 +137,7 @@ public class FieldController {
 
             return new ResponseEntity<String>( HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
     }
