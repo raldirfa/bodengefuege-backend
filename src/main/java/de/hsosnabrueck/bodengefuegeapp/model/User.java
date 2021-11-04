@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(generator = "userSeq")
-    private Long Id;
+    private Long id;
 
     private String email;
 
@@ -47,11 +47,11 @@ public class User {
     // Getter and Setter
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        id = id;
     }
 
     public String getEmail() {
