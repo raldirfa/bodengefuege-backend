@@ -3,7 +3,7 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name="cropSeq")
+@SequenceGenerator(name="cropSeq", allocationSize = 1)
 public class Crop {
 
     @Id

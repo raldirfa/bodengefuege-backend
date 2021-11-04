@@ -3,7 +3,7 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name="soilSeq")
+@SequenceGenerator(name="soilSeq", allocationSize = 1)
 public class Soil {
 
     @Id

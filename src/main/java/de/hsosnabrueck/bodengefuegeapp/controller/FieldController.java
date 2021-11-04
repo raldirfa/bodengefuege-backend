@@ -70,11 +70,9 @@ public class FieldController {
         try {
             JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
             User user = userRepository.getUserFromToken(jwtToken);
-            Field field = new Field(jsonObjectField.get("name").toString(), user);
             Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
             Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
-            field.setGrade(grade);
-            field.setSoil(soil);
+            Field field = new Field(jsonObjectField.get("name").toString(), user, grade, soil);
             if(user.getFields() == null){
                 ArrayList<Field> arrayList = new ArrayList<>();
                 arrayList.add(field);

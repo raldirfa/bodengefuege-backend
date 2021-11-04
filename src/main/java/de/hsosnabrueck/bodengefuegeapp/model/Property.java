@@ -3,10 +3,11 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.*;
 
 @Entity
+@SequenceGenerator(name = "propertySeq", allocationSize = 1)
 public class Property {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "propertySeq")
     private long id;
 
     private int rating;

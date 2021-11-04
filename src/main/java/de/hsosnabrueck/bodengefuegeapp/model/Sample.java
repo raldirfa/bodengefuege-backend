@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@SequenceGenerator(name="sampleSeq")
+@SequenceGenerator(name="sampleSeq", allocationSize = 1)
 public class Sample {
 
     @Id

@@ -6,7 +6,7 @@ import java.util.List;
 // https://thorben-janssen.com/key-jpa-hibernate-annotations/#ManyToOne_and_OneToMany
 
 @Entity
-@SequenceGenerator(name="userSeq")
+@SequenceGenerator(name="userSeq", allocationSize = 1)
 public class User {
 
     private String issuer = "de.hsosnabrueck.bodengefuege";
@@ -54,7 +54,7 @@ public class User {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public String getEmail() {

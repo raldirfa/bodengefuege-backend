@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-@SequenceGenerator(name="gradeSeq")
+@SequenceGenerator(name="gradeSeq", allocationSize = 1)
 public class Grade {
 
     @Id
