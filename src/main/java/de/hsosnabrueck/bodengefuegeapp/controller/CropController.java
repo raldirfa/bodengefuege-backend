@@ -84,10 +84,6 @@ public class CropController {
                     }
                     user.setFavCrops(crops);
                 }
-                /*System.out.println("l");
-                System.out.println(user.getFavCrops());
-                updateFavCrops(cropsList, jsonObjectCrop);
-                System.out.println(user.getFavCrops());*/
             }
 
             userRepository.save(user);
@@ -95,18 +91,6 @@ public class CropController {
         }
         catch(Exception e){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private void updateFavCrops(List<Crop> cropsList, JSONObject crop){
-        System.out.println("j" + cropsList.size());
-        for(Crop c : cropsList){
-            System.out.println("c: " + c.getId());
-            System.out.println("c1: " + crop);
-            if(c.getId() == Integer.parseInt(crop.getString("id"))){
-
-            }
-
         }
     }
 
