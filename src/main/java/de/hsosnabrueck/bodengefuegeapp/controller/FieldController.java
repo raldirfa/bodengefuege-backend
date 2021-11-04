@@ -93,6 +93,11 @@ public class FieldController {
 
     }
 
+    @PatchMapping("/fields/{fieldId}")
+    public ResponseEntity fieldsPatch(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody Map<String,Object> inputData) {
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
     @PostMapping("/fields/{fieldId}/samples")
     public ResponseEntity addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
         if (jwtToken == null) {
