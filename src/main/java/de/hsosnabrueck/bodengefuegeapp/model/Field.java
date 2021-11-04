@@ -4,10 +4,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@SequenceGenerator(name = "fieldSeq", allocationSize = 1)
 public class Field {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "fieldSeq")
     private long id;
 
     private String name;
@@ -27,9 +28,11 @@ public class Field {
     public Field() {
     }
 
-    public Field(String name, User user) {
+    public Field(String name, User user, Grade grade, Soil soil) {
         this.name = name;
         this.user = user;
+        this.grade = grade;
+        this.soil = soil;
     }
 
     // Getter and Setter
@@ -64,6 +67,10 @@ public class Field {
 
     public void setSamples(List<Sample> samples) {
         this.samples = samples;
+    }
+
+    public void addSample(Sample sample) {
+        this.samples.add(sample);
     }
 
     public Grade getGrade() {

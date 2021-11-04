@@ -6,8 +6,10 @@ import java.util.List;
 // https://thorben-janssen.com/key-jpa-hibernate-annotations/#ManyToOne_and_OneToMany
 
 @Entity
-@SequenceGenerator(name="userSeq")
+@SequenceGenerator(name="userSeq", allocationSize = 1)
 public class User {
+
+    private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @Id
     @GeneratedValue(generator = "userSeq")
@@ -37,6 +39,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.jwtToken = JwtToken.createJWT(issuer, this);
         this.setting = new Setting();
     }
 
@@ -51,7 +54,7 @@ public class User {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public String getEmail() {
@@ -109,4 +112,5 @@ public class User {
     public void setFavCrops(List<Crop> favCrops) {
         this.favCrops = favCrops;
     }
+
 }

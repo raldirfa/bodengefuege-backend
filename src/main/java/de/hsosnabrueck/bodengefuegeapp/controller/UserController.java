@@ -2,32 +2,29 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.Setting;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RestController
 public class UserController {
 
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
-    private String issuer = "de.hsosnabrueck.bodengefuege";
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
+    @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> loginPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -43,8 +40,8 @@ public class UserController {
         return new ResponseEntity<String>(createResponseWithToken(user), HttpStatus.OK);
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody Map<String, Object> inputData) {
+    @PostMapping(value = "/registration", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> registrationPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -59,17 +56,15 @@ public class UserController {
         
     }
 
-    @GetMapping("/user")
+    @GetMapping(value = "/user", produces = "application/json;charset=UTF-8")
     public ResponseEntity<String> userGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        try{
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+        try{           
+            User user = userRepository.getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
-
-            return new ResponseEntity<String>(createResponseWithoutToken(user.get()), HttpStatus.OK);
+            return new ResponseEntity<String>(createResponseWithoutToken(user), HttpStatus.OK);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -82,7 +77,7 @@ public class UserController {
       @PatchMapping("/user")
       public ResponseEntity<String> userPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData) {
           Gson gson = new GsonBuilder().create();
-          //String jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjEsInVzZXIiOiJ1c2VyQGVtYWlsLmRlIn0.08iOMKV3FWuuIYqERSzmqOk-bEfVjTqSB84r_KUsS_X-UlUwFIDm5nt35PkHQejpPytpyvXmElmK2x6vWHMPDg";
+          
           if(jwtToken == null){
               return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
           }
@@ -96,18 +91,17 @@ public class UserController {
           }
 
           try{
-              Claims claims = JwtToken.decodeJWT(jwtToken);
               User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
 
               JSONObject jsonObjectUser = (JSONObject) jsonObject.get("user");
               Setting inputSetting = gson.fromJson(jsonObjectUser.get("settings").toString(), Setting.class);
 
-              Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+              User user = userRepository.getUserFromToken(jwtToken);
 
-              user.get().setEmail(inputUser.getEmail());
-              user.get().setUsername(inputUser.getUsername());
-              user.get().setSetting(inputSetting);
-              userRepository.save(user.get());
+              user.setEmail(inputUser.getEmail());
+              user.setUsername(inputUser.getUsername());
+              user.setSetting(inputSetting);
+              userRepository.save(user);
 
               return new ResponseEntity<String>(HttpStatus.OK);
           }
@@ -120,7 +114,7 @@ public class UserController {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();        
 
-        map.put("token", JwtToken.createJWT(issuer, user));   
+        map.put("token", user.getJwtToken());   
         map.put("user", createUserMap(user));
         String json = gson.toJson(map);
 
@@ -155,6 +149,5 @@ public class UserController {
         }
         return null;
     }
-
-
+    
 }

@@ -3,7 +3,7 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name="cropSeq")
+@SequenceGenerator(name="cropSeq", allocationSize = 1)
 public class Crop {
 
     @Id
@@ -13,6 +13,10 @@ public class Crop {
     private String name;
 
     public Crop() {
+    }
+
+    public Crop(String name) {
+        this.name = name;
     }
 
     // Getter and Setter

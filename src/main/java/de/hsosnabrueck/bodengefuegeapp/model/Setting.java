@@ -1,15 +1,13 @@
 package de.hsosnabrueck.bodengefuegeapp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@SequenceGenerator(name = "settingSeq", allocationSize = 1)
 public class Setting {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "settingSeq")
     private long id;
 
     private boolean tutorial = true;

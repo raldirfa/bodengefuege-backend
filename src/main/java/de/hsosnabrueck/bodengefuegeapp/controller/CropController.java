@@ -3,45 +3,97 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.model.Crop;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
 public class CropController {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CropRepository cropRepository;
+    final UserRepository userRepository;
+    final CropRepository cropRepository;
 
-    @GetMapping("/crops")
-    public ResponseEntity<String> userGet(@RequestHeader("token") String jwtToken) {
+    public CropController(UserRepository userRepository, CropRepository cropRepository) {
+        this.userRepository = userRepository;
+        this.cropRepository = cropRepository;
+    }
+
+    @GetMapping(value= "/crops", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
-
-            return new ResponseEntity<String>(createResponse(user.get()),HttpStatus.OK);
+            return new ResponseEntity<String>(createResponse(user),HttpStatus.OK);
         }
         catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PatchMapping("/crops")
+    public ResponseEntity<String> cropsPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData)
+    {
+        if(jwtToken == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("crop")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            User user = userRepository.getUserFromToken(jwtToken);
+            List<Crop> cropsList = user.getFavCrops();
+            JSONObject jsonObjectCrop = (JSONObject) jsonObject.get("crop");
+            Optional<Crop> c = cropRepository.findById(Long.parseLong(jsonObjectCrop.get("id").toString()));
+
+            if(cropsList == null || cropsList.isEmpty()){
+                cropsList = new ArrayList<>();
+                cropsList.add(c.get());
+                user.getFavCrops().add(c.get());
+
+
+            }
+            else{
+                System.out.println("l");
+                System.out.println(user.getFavCrops());
+                updateFavCrops(cropsList, jsonObjectCrop);
+                System.out.println(user.getFavCrops());
+            }
+
+            
+            return new ResponseEntity<String>(HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void updateFavCrops(List<Crop> cropsList, JSONObject crop){
+        System.out.println("j");
+        for(Crop c : cropsList){
+            System.out.println("c: " + c);
+            System.out.println("c1: " + crop);
+            if(c.getId() == Integer.parseInt(crop.getString("id"))){
+
+            }
+        }
     }
 
     private String createResponse(User user){
@@ -80,5 +132,4 @@ public class CropController {
         }
         return false;
     }
-
 }

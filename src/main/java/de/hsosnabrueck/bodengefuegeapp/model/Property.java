@@ -3,10 +3,11 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.*;
 
 @Entity
+@SequenceGenerator(name = "propertySeq", allocationSize = 1)
 public class Property {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "propertySeq")
     private long id;
 
     private int rating;
@@ -17,10 +18,16 @@ public class Property {
     @ManyToOne()
     private Sample sample;
 
-    @OneToOne
-    private Criteria criteria;
+    private String criteria;
 
     public Property() {
+    }
+
+    public Property(int rating, byte[] image, Sample sample, String criteria) {
+        this.rating = rating;
+        this.image = image;
+        this.sample = sample;
+        this.criteria = criteria;
     }
 
     // Getter and Setter
@@ -57,11 +64,11 @@ public class Property {
         this.sample = sample;
     }
 
-    public Criteria getCriteria() {
+    public String getCriteria() {
         return criteria;
     }
 
-    public void setCriteria(Criteria criteria) {
+    public void setCriteria(String criteria) {
         this.criteria = criteria;
     }
 }

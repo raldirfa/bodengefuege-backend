@@ -2,76 +2,189 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.hsosnabrueck.bodengefuegeapp.dto.PropertyDto;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
-import de.hsosnabrueck.bodengefuegeapp.model.Field;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
-import de.hsosnabrueck.bodengefuegeapp.model.Sample;
-import de.hsosnabrueck.bodengefuegeapp.model.User;
-import de.hsosnabrueck.bodengefuegeapp.repository.FieldRepository;
-import de.hsosnabrueck.bodengefuegeapp.repository.SampleRepository;
-import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.hsosnabrueck.bodengefuegeapp.model.*;
+import de.hsosnabrueck.bodengefuegeapp.repository.*;
+import io.jsonwebtoken.Header;
+
+import org.apache.tomcat.util.http.parser.MediaType;
+import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import javax.swing.text.AbstractDocument.Content;
 
 @RestController
 public class FieldController {
 
-    @Autowired
-    FieldRepository fieldRepository;
+    final FieldRepository fieldRepository;
+    final SampleRepository sampleRepository;
+    final UserRepository userRepository;
+    final CropRepository cropRepository;
+    final SoilRepository soilRepository;
 
-    @Autowired
-    SampleRepository sampleRepository;
+    public FieldController(FieldRepository fieldRepository, SampleRepository sampleRepository, UserRepository userRepository, CropRepository cropRepository, SoilRepository soilRepository) {
+        this.fieldRepository = fieldRepository;
+        this.sampleRepository = sampleRepository;
+        this.userRepository = userRepository;
+        this.cropRepository = cropRepository;
+        this.soilRepository = soilRepository;
+    }
 
-    @Autowired
-    UserRepository userRepository;
-
-
-    private String issuer = "de.hsosnabrueck.bodengefuege";
-
-    @GetMapping("/fields")
-    public ResponseEntity<String> fields(@RequestHeader("token") String jwtToken) {
+    @GetMapping(value = "/fields", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<String> fieldsGet(@RequestHeader("token") String jwtToken) {
 
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try {
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+            User user = userRepository.getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
-
-            return new ResponseEntity<String>(createResponseFields(user.get()), HttpStatus.OK);
+            return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
 
     }
 
-    @PostMapping("/fields/{fieldId}/samples")
-    public ResponseEntity addSample(@RequestHeader String jwtToken, @RequestBody SampleDto sampleDto) {
+    @PostMapping("/fields")
+    public ResponseEntity<String> fieldsPost(@RequestHeader("token") String jwtToken, @RequestBody Map<String,Object> inputData) {
+        Gson gson = new GsonBuilder().create();
         if (jwtToken == null) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("field")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
+            User user = userRepository.getUserFromToken(jwtToken);
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
+            Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
+            Field field = new Field(jsonObjectField.get("name").toString(), user, grade, soil);
+            if(user.getFields() == null){
+                ArrayList<Field> arrayList = new ArrayList<>();
+                arrayList.add(field);
+                user.setFields(arrayList);
+            }
+            else{
+                user.getFields().add(field);
+            }
+            userRepository.save(user);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-        // TODO map dto into sample
-        Sample sample = new Sample(sampleDto.getField(), sampleDto.getDate(), sampleDto.getProperties(), sampleDto.getCrop(), sampleDto.getGrade());
+    }
+
+    @PatchMapping("/fields/{fieldId}")
+    public ResponseEntity<String>  fieldsPatch(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody Map<String,Object> inputData) {
+        Gson gson = new GsonBuilder().create();
+        if (jwtToken == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("field")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
+            Optional<Field> field = fieldRepository.findById(Long.parseLong(jsonObjectField.get("id").toString()));
+            User user = userRepository.getUserFromToken(jwtToken);
+            field.get().setName(jsonObjectField.get("name").toString());
+            Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
+            field.get().setSoil(soil);
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
+            field.get().setGrade(grade);
+            
+            userRepository.save(user);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/fields/{fieldId}")
+    public ResponseEntity<String> fieldsDelete(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
+        Gson gson = new GsonBuilder().create();
+        if (jwtToken == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }       
+        try {
+            fieldRepository.deleteById(fieldId);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/fields/{fieldId}/samples")
+    public ResponseEntity<Map<String,Object>> getSamples(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
+        if (jwtToken == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Map<String,Object> map = new LinkedHashMap<>();
+        List<SampleDto> sampleDtos = new ArrayList<>();
+
+        fieldRepository.findById(fieldId).ifPresent(field -> {
+            for (Sample sample : field.getSamples()) {
+                List<PropertyDto> propertyDtos = new ArrayList<>();
+                for (Property property : sample.getProperties()) {
+                    propertyDtos.add(new PropertyDto(property.getRating(), property.getImage(), property.getCriteria()));
+                }
+                sampleDtos.add(new SampleDto(sample.getDate(), propertyDtos, sample.getCrop(), sample.getGrade().getLongitude(), sample.getGrade().getLatitude()));
+            }
+        });
+
+        map.put("samples", sampleDtos);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/fields/{fieldId}/samples")
+    public ResponseEntity<String> addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
+        if (jwtToken == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Field field = fieldRepository.findById(fieldId).get();
+        List<Property> properties = new ArrayList<>();
+        for (PropertyDto propertyDto : sampleDto.getProperties()) {
+            properties.add(new Property(propertyDto.getRating(), propertyDto.getImage(), null, propertyDto.getCriteria()));
+        }
+
+        Sample sample = new Sample(field, sampleDto.getLocalDateTime(), properties, sampleDto.getCrop(), new Grade(sampleDto.getLng(), sampleDto.getLat()));
 
         sampleRepository.save(sample);
 
-        return ResponseEntity.ok("");
+        return new ResponseEntity<>("Erfolgreich", HttpStatus.OK);
     }
 
+
     @DeleteMapping("/fields/{fieldId}/samples/{sampleId}")
-    public ResponseEntity delete(@RequestHeader String jwtToken, @PathVariable long fieldId, @PathVariable long sampleId) {
+    public ResponseEntity deleteSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @PathVariable long sampleId) {
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -86,7 +199,6 @@ public class FieldController {
     private String createResponseFields(User user) {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
-
         map.put("fields", createFieldsArrayList(user));
         String json = gson.toJson(map);
 
@@ -96,22 +208,18 @@ public class FieldController {
     private ArrayList<Map<String, Object>> createFieldsArrayList(User user) {
         ArrayList<Map<String, Object>> arrayList = new ArrayList<>();
 
-        //ToDo: Delte Map2 - DEMO
-        Map<String, Object> map2 = new LinkedHashMap<>();
-        map2.put("id", 1);
-        map2.put("name", "testName");
-        arrayList.add(map2);
         for (Field f : user.getFields()) {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("id", f.getId());
             map.put("name", f.getName());
-            map.put("grade", f.getGrade());
+            map.put("lng", f.getGrade().getLongitude());
+            map.put("lat", f.getGrade().getLatitude());
             map.put("soil", f.getSoil());
             arrayList.add(map);
         }
 
         return arrayList;
     }
-
+   
 
 }
