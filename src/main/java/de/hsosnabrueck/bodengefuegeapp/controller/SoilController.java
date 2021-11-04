@@ -47,7 +47,7 @@ public class SoilController {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
 
-        map.put("crops", createSoilArrayList(user));
+        map.put("soils", createSoilArrayList(user));
         String json = gson.toJson(map);
 
         return json;
