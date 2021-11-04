@@ -38,7 +38,7 @@ public class FieldController {
         this.soilRepository = soilRepository;
     }
 
-    @GetMapping("/fields")
+    @GetMapping(value = "/fields", produces = "application/json")
     public ResponseEntity<String> fieldsGet(@RequestHeader("token") String jwtToken) {
 
         if (jwtToken == null) {
@@ -46,10 +46,8 @@ public class FieldController {
         }
         try {
             User user = userRepository.getUserFromToken(jwtToken);
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Content-Type", 
-            "application/json");
-            return new ResponseEntity<String>(createResponseFields(user), responseHeaders,HttpStatus.OK);
+
+            return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
         } catch (Exception e) {
             //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
