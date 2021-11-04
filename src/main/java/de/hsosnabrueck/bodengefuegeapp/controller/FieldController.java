@@ -5,7 +5,11 @@ import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
 import de.hsosnabrueck.bodengefuegeapp.model.*;
 import de.hsosnabrueck.bodengefuegeapp.repository.*;
+import io.jsonwebtoken.Header;
+
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.json.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.swing.text.AbstractDocument.Content;
 
 @RestController
 public class FieldController {
@@ -40,8 +46,10 @@ public class FieldController {
         }
         try {
             User user = userRepository.getUserFromToken(jwtToken);
-
-            return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Content-Type", 
+            "application/json");
+            return new ResponseEntity<String>(createResponseFields(user), responseHeaders,HttpStatus.OK);
         } catch (Exception e) {
             //e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
