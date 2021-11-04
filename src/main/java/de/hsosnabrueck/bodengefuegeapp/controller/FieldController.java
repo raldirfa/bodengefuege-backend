@@ -2,6 +2,7 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.hsosnabrueck.bodengefuegeapp.dto.PropertyDto;
 import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
 import de.hsosnabrueck.bodengefuegeapp.model.*;
 import de.hsosnabrueck.bodengefuegeapp.repository.*;
@@ -14,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import javax.swing.text.AbstractDocument.Content;
 
@@ -143,21 +141,46 @@ public class FieldController {
         }
     }
 
-    @PostMapping("/fields/{fieldId}/samples")
-    public ResponseEntity addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
+    @GetMapping("/fields/{fieldId}/samples")
+    public ResponseEntity<List<SampleDto>> getSamples(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
         if (jwtToken == null) {
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        // TODO map dto into sample
+        List<SampleDto> sampleDtos = new ArrayList<>();
+        fieldRepository.findById(fieldId).ifPresent(field -> {
+            for (Sample sample : field.getSamples()) {
+                List<PropertyDto> propertyDtos = new ArrayList<>();
+                for (Property property : sample.getProperties()) {
+                    propertyDtos.add(new PropertyDto(property.getRating(), property.getImage(), property.getCriteria()));
+                }
+                sampleDtos.add(new SampleDto(sample.getDate(), propertyDtos, sample.getCrop(), sample.getGrade().getLongitude(), sample.getGrade().getLatitude()));
+            }
+        });
+
+        return new ResponseEntity<>(sampleDtos, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/fields/{fieldId}/samples")
+    public ResponseEntity<String> addSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody SampleDto sampleDto) {
+        if (jwtToken == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         Field field = fieldRepository.findById(fieldId).get();
-        Crop crop = cropRepository.findById(sampleDto.getCrop()).get();
-        Sample sample = new Sample(field, sampleDto.getDate(), sampleDto.getProperties(), crop, sampleDto.getGrade());
+        List<Property> properties = new ArrayList<>();
+        for (PropertyDto propertyDto : sampleDto.getProperties()) {
+            properties.add(new Property(propertyDto.getRating(), propertyDto.getImage(), null, propertyDto.getCriteria()));
+        }
+
+        Sample sample = new Sample(field, sampleDto.getLocalDateTime(), properties, sampleDto.getCrop(), new Grade(sampleDto.getLng(), sampleDto.getLat()));
 
         sampleRepository.save(sample);
 
-        return ResponseEntity.ok("");
+        return new ResponseEntity<>("Erfolgreich", HttpStatus.OK);
     }
+
 
     @DeleteMapping("/fields/{fieldId}/samples/{sampleId}")
     public ResponseEntity deleteSample(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @PathVariable long sampleId) {

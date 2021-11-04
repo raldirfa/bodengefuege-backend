@@ -22,6 +22,13 @@ public class Property {
     public Property() {
     }
 
+    public Property(int rating, byte[] image, Sample sample, String criteria) {
+        this.rating = rating;
+        this.image = image;
+        this.sample = sample;
+        this.criteria = criteria;
+    }
+
     // Getter and Setter
 
     public long getId() {

@@ -66,6 +66,10 @@ public class Field {
         this.samples = samples;
     }
 
+    public void addSample(Sample sample) {
+        this.samples.add(sample);
+    }
+
     public Grade getGrade() {
         return grade;
     }

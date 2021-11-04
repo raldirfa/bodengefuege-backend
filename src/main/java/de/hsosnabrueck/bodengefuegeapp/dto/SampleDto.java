@@ -1,58 +1,66 @@
 package de.hsosnabrueck.bodengefuegeapp.dto;
 
+import de.hsosnabrueck.bodengefuegeapp.model.Crop;
 import de.hsosnabrueck.bodengefuegeapp.model.Grade;
-import de.hsosnabrueck.bodengefuegeapp.model.Property;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class SampleDto {
-    private long field;
-    private LocalDateTime date;
-    private List<Property> properties;
-    private long crop;
-    private Grade grade;
+    private LocalDateTime localDateTime;
+    private List<PropertyDto> properties;
+    private Crop crop;
+    private double lng;
+    private double lat;
 
     public SampleDto() {
     }
 
-    public long getField() {
-        return field;
+    public SampleDto(LocalDateTime localDateTime, List<PropertyDto> properties, Crop crop, double lng, double lat) {
+        this.localDateTime = localDateTime;
+        this.properties = properties;
+        this.crop = crop;
+        this.lng = lng;
+        this.lat = lat;
     }
 
-    public void setField(long field) {
-        this.field = field;
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public List<Property> getProperties() {
+    public List<PropertyDto> getProperties() {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setProperties(List<PropertyDto> properties) {
         this.properties = properties;
     }
 
-    public long getCrop() {
+    public Crop getCrop() {
         return crop;
     }
 
-    public void setCrop(long crop) {
+    public void setCrop(Crop crop) {
         this.crop = crop;
     }
 
-    public Grade getGrade() {
-        return grade;
+    public double getLng() {
+        return lng;
     }
 
-    public void setGrade(Grade grade) {
-        this.grade = grade;
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }
