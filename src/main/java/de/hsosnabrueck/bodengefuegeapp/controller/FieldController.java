@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class FieldController {
@@ -95,7 +96,34 @@ public class FieldController {
 
     @PatchMapping("/fields/{fieldId}")
     public ResponseEntity fieldsPatch(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody Map<String,Object> inputData) {
-        return new ResponseEntity<String>(HttpStatus.OK);
+        Gson gson = new GsonBuilder().create();
+        if (jwtToken == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("field")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
+            Optional<Field> field = fieldRepository.findById(Long.parseLong(jsonObjectField.get("id").toString()));
+            User user = getUserFromToken(jwtToken);
+            field.get().setName(jsonObjectField.get("name").toString());
+            Soil soil = gson.fromJson(jsonObjectField.get("soil").toString(), Soil.class);
+            field.get().setSoil(soil);
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()));
+            field.get().setGrade(grade);
+            
+            userRepository.save(user);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/fields/{fieldId}/samples")
