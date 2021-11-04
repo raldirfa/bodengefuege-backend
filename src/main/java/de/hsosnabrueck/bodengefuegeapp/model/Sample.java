@@ -5,10 +5,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@SequenceGenerator(name="sampleSeq")
 public class Sample {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "sampleSeq")
     private long id;
 
     @ManyToOne

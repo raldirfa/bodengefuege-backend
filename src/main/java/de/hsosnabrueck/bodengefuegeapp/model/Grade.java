@@ -3,22 +3,24 @@ package de.hsosnabrueck.bodengefuegeapp.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
+@SequenceGenerator(name="gradeSeq")
 public class Grade {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "gradeSeq")
     private long id;
 
-    private double longitute;
+    private double longitude;
     private double latitude;
 
     public Grade() {
     }
 
     public Grade(double _longitude, double _latitude) {
-        this.longitute = _longitude;
+        this.longitude = _longitude;
         this.latitude = _latitude;
     }
 
@@ -32,12 +34,12 @@ public class Grade {
         this.id = id;
     }
 
-    public double getLongitute() {
-        return longitute;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongitute(double longitute) {
-        this.longitute = longitute;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public double getLatitude() {
