@@ -9,7 +9,7 @@ public class Sample {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long Id;
+    private long id;
 
     @ManyToOne
     private Field field;
@@ -28,14 +28,22 @@ public class Sample {
     public Sample() {
     }
 
+    public Sample(Field field, LocalDateTime date, List<Property> properties, Crop crop, Grade grade) {
+        this.field = field;
+        this.date = date;
+        this.properties = properties;
+        this.crop = crop;
+        this.grade = grade;
+    }
+
     // Getter and Setter
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Field getField() {

@@ -1,22 +1,17 @@
 package de.hsosnabrueck.bodengefuegeapp.controller;
 
 import com.google.gson.Gson;
-
 import com.google.gson.GsonBuilder;
-
-import de.hsosnabrueck.bodengefuegeapp.model.Setting;
-import org.hibernate.annotations.SourceType;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
+import de.hsosnabrueck.bodengefuegeapp.model.Setting;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
