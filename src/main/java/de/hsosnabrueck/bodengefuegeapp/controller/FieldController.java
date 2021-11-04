@@ -174,7 +174,6 @@ public class FieldController {
     private String createResponseFields(User user) {
         Gson gson = new GsonBuilder().create();
         Map<String, Object> map = new LinkedHashMap<>();
-
         map.put("fields", createFieldsArrayList(user));
         String json = gson.toJson(map);
 
@@ -188,7 +187,8 @@ public class FieldController {
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("id", f.getId());
             map.put("name", f.getName());
-            map.put("grade", f.getGrade());
+            map.put("lng", f.getGrade().getLongitude());
+            map.put("lat", f.getGrade().getLatitude());
             map.put("soil", f.getSoil());
             arrayList.add(map);
         }
