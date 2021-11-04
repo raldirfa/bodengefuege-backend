@@ -62,8 +62,7 @@ public class UserController {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
-        try{
-           
+        try{           
             User user = getUserFromToken(jwtToken);
 
             return new ResponseEntity<String>(createResponseWithoutToken(user), HttpStatus.OK);
@@ -93,18 +92,17 @@ public class UserController {
           }
 
           try{
-              Claims claims = JwtToken.decodeJWT(jwtToken);
               User inputUser = gson.fromJson(jsonObject.get("user").toString(), User.class);
 
               JSONObject jsonObjectUser = (JSONObject) jsonObject.get("user");
               Setting inputSetting = gson.fromJson(jsonObjectUser.get("settings").toString(), Setting.class);
 
-              Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+              User user = getUserFromToken(jwtToken);
 
-              user.get().setEmail(inputUser.getEmail());
-              user.get().setUsername(inputUser.getUsername());
-              user.get().setSetting(inputSetting);
-              userRepository.save(user.get());
+              user.setEmail(inputUser.getEmail());
+              user.setUsername(inputUser.getUsername());
+              user.setSetting(inputSetting);
+              userRepository.save(user);
 
               return new ResponseEntity<String>(HttpStatus.OK);
           }
