@@ -44,6 +44,7 @@ public class CropController {
     @PatchMapping("/crops")
     public ResponseEntity<String> cropsPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData)
     {
+        Gson gson = new GsonBuilder().create();
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -68,16 +69,28 @@ public class CropController {
                 cropsList.add(c.get());
                 user.getFavCrops().add(c.get());
 
-
             }
             else{
-                System.out.println("l");
+                Crop inputCrop = gson.fromJson(jsonObject.get("crop").toString(), Crop.class);
+                if(jsonObjectCrop.getBoolean("favorite")){
+                    user.getFavCrops().add(inputCrop);
+                }
+                else{
+                    List<Crop> crops = new ArrayList<>();
+                    for(Crop c1: user.getFavCrops()){
+                        if(c1.getId() != inputCrop.getId()){
+                            crops.add(c1);
+                        }
+                    }
+                    user.setFavCrops(crops);
+                }
+                /*System.out.println("l");
                 System.out.println(user.getFavCrops());
                 updateFavCrops(cropsList, jsonObjectCrop);
-                System.out.println(user.getFavCrops());
+                System.out.println(user.getFavCrops());*/
             }
 
-            
+            userRepository.save(user);
             return new ResponseEntity<String>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -86,13 +99,14 @@ public class CropController {
     }
 
     private void updateFavCrops(List<Crop> cropsList, JSONObject crop){
-        System.out.println("j");
+        System.out.println("j" + cropsList.size());
         for(Crop c : cropsList){
-            System.out.println("c: " + c);
+            System.out.println("c: " + c.getId());
             System.out.println("c1: " + crop);
             if(c.getId() == Integer.parseInt(crop.getString("id"))){
 
             }
+
         }
     }
 
