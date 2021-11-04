@@ -6,7 +6,6 @@ import de.hsosnabrueck.bodengefuegeapp.dto.SampleDto;
 import de.hsosnabrueck.bodengefuegeapp.model.*;
 import de.hsosnabrueck.bodengefuegeapp.repository.*;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,18 +22,14 @@ public class FieldController {
     final SampleRepository sampleRepository;
     final UserRepository userRepository;
     final CropRepository cropRepository;
+    final SoilRepository soilRepository;
 
-    @Autowired
-    SoilRepository soilRepository;
-
-
-    private String issuer = "de.hsosnabrueck.bodengefuege";
-
-    public FieldController(FieldRepository fieldRepository, SampleRepository sampleRepository, UserRepository userRepository, CropRepository cropRepository) {
+    public FieldController(FieldRepository fieldRepository, SampleRepository sampleRepository, UserRepository userRepository, CropRepository cropRepository, SoilRepository soilRepository) {
         this.fieldRepository = fieldRepository;
         this.sampleRepository = sampleRepository;
         this.userRepository = userRepository;
         this.cropRepository = cropRepository;
+        this.soilRepository = soilRepository;
     }
 
     @GetMapping("/fields")
@@ -95,7 +90,7 @@ public class FieldController {
     }
 
     @PatchMapping("/fields/{fieldId}")
-    public ResponseEntity fieldsPatch(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody Map<String,Object> inputData) {
+    public ResponseEntity<String>  fieldsPatch(@RequestHeader("token") String jwtToken, @PathVariable long fieldId, @RequestBody Map<String,Object> inputData) {
         Gson gson = new GsonBuilder().create();
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -127,7 +122,7 @@ public class FieldController {
     }
 
     @DeleteMapping("/fields/{fieldId}")
-    public ResponseEntity fieldsDelete(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
+    public ResponseEntity<String> fieldsDelete(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
         Gson gson = new GsonBuilder().create();
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

@@ -6,7 +6,6 @@ import de.hsosnabrueck.bodengefuegeapp.model.Soil;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.SoilRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,7 @@ public class SoilController {
     }
 
     @GetMapping("/soils")
-    public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {
+    public ResponseEntity<String> soilsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }

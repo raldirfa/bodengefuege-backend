@@ -6,7 +6,6 @@ import de.hsosnabrueck.bodengefuegeapp.model.Setting;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> loginPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
@@ -42,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody Map<String, Object> inputData) {
+    public ResponseEntity<String> registrationPost(@RequestBody Map<String, Object> inputData) {
         if(inputData == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }

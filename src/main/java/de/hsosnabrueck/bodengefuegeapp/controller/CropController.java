@@ -3,20 +3,14 @@ package de.hsosnabrueck.bodengefuegeapp.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.hsosnabrueck.bodengefuegeapp.model.Crop;
-import de.hsosnabrueck.bodengefuegeapp.model.JwtToken;
 import de.hsosnabrueck.bodengefuegeapp.model.User;
 import de.hsosnabrueck.bodengefuegeapp.repository.CropRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-
-import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
@@ -50,7 +44,6 @@ public class CropController {
     @PatchMapping("/crops")
     public ResponseEntity<String> cropsPatch(@RequestHeader("token") String jwtToken, @RequestBody Map<String, Object> inputData)
     {
-        Gson gson = new GsonBuilder().create();
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
