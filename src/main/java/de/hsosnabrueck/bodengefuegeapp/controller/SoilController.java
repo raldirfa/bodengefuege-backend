@@ -26,7 +26,7 @@ public class SoilController {
     @Autowired
     SoilRepository soilRepository;
 
-    @GetMapping("/soil")
+    @GetMapping("/soils")
     public ResponseEntity<String> cropsGet(@RequestHeader("token") String jwtToken) {
         if(jwtToken == null){
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
