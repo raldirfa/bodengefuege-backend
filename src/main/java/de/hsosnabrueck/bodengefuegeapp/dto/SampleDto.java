@@ -1,13 +1,12 @@
 package de.hsosnabrueck.bodengefuegeapp.dto;
 
 import de.hsosnabrueck.bodengefuegeapp.model.Crop;
-import de.hsosnabrueck.bodengefuegeapp.model.Grade;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class SampleDto {
-    private LocalDateTime localDateTime;
+    private Long id;
+    private String localDateTime;
     private List<PropertyDto> properties;
     private Crop crop;
     private double lng;
@@ -16,7 +15,8 @@ public class SampleDto {
     public SampleDto() {
     }
 
-    public SampleDto(LocalDateTime localDateTime, List<PropertyDto> properties, Crop crop, double lng, double lat) {
+    public SampleDto(Long id, String localDateTime, List<PropertyDto> properties, Crop crop, double lng, double lat) {
+        this.id = id;
         this.localDateTime = localDateTime;
         this.properties = properties;
         this.crop = crop;
@@ -24,11 +24,19 @@ public class SampleDto {
         this.lat = lat;
     }
 
-    public LocalDateTime getLocalDateTime() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLocalDateTime() {
         return localDateTime;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
+    public void setLocalDateTime(String localDateTime) {
         this.localDateTime = localDateTime;
     }
 

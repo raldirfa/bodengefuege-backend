@@ -77,6 +77,11 @@ public class DatabaseInit {
             User user = new User("user", "user@test", "secret");
             user.setJwtToken("eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZS5oc29zbmFicnVlY2suYm9kZW5nZWZ1ZWdlIiwiaWQiOjI1NSwidXNlciI6InVzZXIxMkBlbWFpbC5kZSJ9.plfKPhE8Cj5RDaHQo66eGfFHvlWWJgSLgElBL9xYonFsFXwQBN4ftWarF-KeGHCPR-CI0OIY4ghVZ96ZdKU0Xg");
 
+            List<Crop> favCrops = new ArrayList<>();
+            favCrops.add(cropRepository.findByName("Kartoffel"));
+            favCrops.add(cropRepository.findByName("Mais"));
+            user.setFavCrops(favCrops);
+
             userRepository.save(user);
 
             Soil soil = new Soil();
@@ -92,7 +97,7 @@ public class DatabaseInit {
                 crop = c;
             }
 
-            Sample sample = new Sample(field, LocalDateTime.now(), null, crop, new Grade(24.5, 42.42));
+            Sample sample = new Sample(field, LocalDateTime.now().toString(), null, crop, new Grade(24.5, 42.42));
 
             List<Property> properties = new ArrayList<>();
             properties.add(new Property(1, null, sample, "Struktur der Oberfläche"));

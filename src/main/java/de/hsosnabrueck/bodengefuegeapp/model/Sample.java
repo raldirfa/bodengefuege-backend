@@ -15,7 +15,7 @@ public class Sample {
     @ManyToOne
     private Field field;
 
-    private LocalDateTime date;
+    private String date;
 
     @OneToMany(mappedBy = "sample", cascade = CascadeType.ALL)
     private List<Property> properties;
@@ -29,7 +29,7 @@ public class Sample {
     public Sample() {
     }
 
-    public Sample(Field field, LocalDateTime date, List<Property> properties, Crop crop, Grade grade) {
+    public Sample(Field field, String date, List<Property> properties, Crop crop, Grade grade) {
         this.field = field;
         this.date = date;
         this.properties = properties;
@@ -55,11 +55,11 @@ public class Sample {
         this.field = field;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

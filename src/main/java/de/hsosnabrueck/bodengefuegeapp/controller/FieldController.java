@@ -139,7 +139,7 @@ public class FieldController {
         }
     }
 
-    @GetMapping("/fields/{fieldId}/samples")
+    @GetMapping(value = "/fields/{fieldId}/samples", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Map<String,Object>> getSamples(@RequestHeader("token") String jwtToken, @PathVariable long fieldId) {
         if (jwtToken == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -153,7 +153,7 @@ public class FieldController {
                 for (Property property : sample.getProperties()) {
                     propertyDtos.add(new PropertyDto(property.getId(), property.getRating(), property.getImage(), property.getCriteria()));
                 }
-                sampleDtos.add(new SampleDto(sample.getDate(), propertyDtos, sample.getCrop(), sample.getGrade().getLongitude(), sample.getGrade().getLatitude()));
+                sampleDtos.add(new SampleDto(sample.getId(), sample.getDate(), propertyDtos, sample.getCrop(), sample.getGrade().getLongitude(), sample.getGrade().getLatitude()));
             }
         });
 
@@ -170,16 +170,19 @@ public class FieldController {
         }
 
         Field field = fieldRepository.findById(fieldId).get();
+        Crop crop = cropRepository.findById(sampleDto.getCrop().getId()).get();
+
         List<Property> properties = new ArrayList<>();
+        Sample sample = new Sample(field, sampleDto.getLocalDateTime(), properties, crop, new Grade(sampleDto.getLng(), sampleDto.getLat()));
 
         List<PropertyDto> propertyDtos = sampleDto.getProperties();
         if (propertyDtos != null) {
             for (PropertyDto propertyDto : propertyDtos) {
-                properties.add(new Property(propertyDto.getRating(), propertyDto.getImage(), null, propertyDto.getCriteria()));
+                Property property = new Property(propertyDto.getRating(), propertyDto.getImage(), sample, propertyDto.getCriteria());
+                properties.add(property);
             }
         }
 
-        Sample sample = new Sample(field, sampleDto.getLocalDateTime(), properties, sampleDto.getCrop(), new Grade(sampleDto.getLng(), sampleDto.getLat()));
 
         sampleRepository.save(sample);
 
