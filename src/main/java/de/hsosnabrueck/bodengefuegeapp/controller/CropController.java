@@ -32,11 +32,9 @@ public class CropController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try{
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+            User user = getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
-
-            return new ResponseEntity<String>(createResponse(user.get()),HttpStatus.OK);
+            return new ResponseEntity<String>(createResponse(user),HttpStatus.OK);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -63,12 +61,13 @@ public class CropController {
 
         try{
             User user = getUserFromToken(jwtToken);
-            List<Crop> crops = user.getFavCrops();
+            List<Crop> cropsList = user.getFavCrops();
+            JSONObject crops = new JSONObject(inputData);
             
-            System.out.println(inputData);
+            System.out.println(cropsList);
             System.out.println(crops);
 
-            //updateFavCrops(crops, inputData);
+            updateFavCrops(cropsList, crops);
             
             return new ResponseEntity<String>(HttpStatus.OK);
         }
@@ -77,9 +76,11 @@ public class CropController {
         }
     }
 
-    private void updateFavCrops(List<Crop> crops, JSONObject inputData){
-        for(Crop c : crops){
-
+    private void updateFavCrops(List<Crop> cropsList, JSONObject crops){
+        for(Crop c : cropsList){
+            if(c.getId() == Integer.parseInt(crops.getString("id"))){
+                System.out.println(c.getId() + " getid");
+            }
         }
     }
 
