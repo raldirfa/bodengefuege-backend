@@ -4,6 +4,7 @@ import de.hsosnabrueck.bodengefuegeapp.model.*;
 import de.hsosnabrueck.bodengefuegeapp.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class DatabaseInit {
         this.sampleRepository = sampleRepository;
     }
 
-    @Bean
+    @Bean(name = "createCrops")
     public void createCrops() {
         cropRepository.findAll().forEach(crop -> isCropEmpty = false);
         if (isCropEmpty) {
@@ -51,7 +52,7 @@ public class DatabaseInit {
         }
     }
 
-    @Bean
+    @Bean(name = "createSoils")
     public void createSoils() {
         soilRepository.findAll().forEach(crop -> isSoilEmpty = false);
         if (isSoilEmpty) {
@@ -70,6 +71,7 @@ public class DatabaseInit {
     }
 
     @Bean
+    @DependsOn("createSoils")
     public void createDefaultInput() {
         userRepository.findAll().forEach(user -> isUserEmpty = false);
 
