@@ -91,7 +91,6 @@ public class FieldController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
-
     }
 
     @PostMapping("/fields/{fieldId}/samples")
