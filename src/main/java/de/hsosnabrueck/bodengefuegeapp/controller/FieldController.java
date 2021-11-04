@@ -70,8 +70,12 @@ public class FieldController {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try {
+            JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
             User user = getUserFromToken(jwtToken);
-            user.getFields().add(new Field("TestFeld", user));
+            Field field = new Field(jsonObject.get("name").toString(), user);
+            Grade grade = new Grade(Double.parseDouble(jsonObject.get("lng").toString()),Double.parseDouble(jsonObject.get("lat").toString()) );
+            field.setGrade(grade);
+            user.getFields().add(field);
             userRepository.save(user);
 
             return new ResponseEntity<String>( HttpStatus.OK);
