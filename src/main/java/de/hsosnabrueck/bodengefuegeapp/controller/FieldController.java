@@ -9,6 +9,7 @@ import de.hsosnabrueck.bodengefuegeapp.repository.FieldRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.SampleRepository;
 import de.hsosnabrueck.bodengefuegeapp.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,17 +39,53 @@ public class FieldController {
     private String issuer = "de.hsosnabrueck.bodengefuege";
 
     @GetMapping("/fields")
-    public ResponseEntity<String> fields(@RequestHeader("token") String jwtToken) {
+    public ResponseEntity<String> fieldsGet(@RequestHeader("token") String jwtToken) {
 
         if (jwtToken == null) {
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
         try {
-            Claims claims = JwtToken.decodeJWT(jwtToken);
+            User user = getUserFromToken(jwtToken);
 
-            Optional<User> user = userRepository.findById(Long.valueOf((Integer) claims.get("id")));
+            return new ResponseEntity<String>(createResponseFields(user), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
 
-            return new ResponseEntity<String>(createResponseFields(user.get()), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/fields")
+    public ResponseEntity<String> fieldsPost(@RequestHeader("token") String jwtToken, @RequestBody Map<String,Object> inputData) {
+
+        if (jwtToken == null) {
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        if(inputData == null){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        JSONObject jsonObject = new JSONObject(inputData);
+        if(!jsonObject.has("field")){
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            JSONObject jsonObjectField = (JSONObject) jsonObject.get("field");
+            User user = getUserFromToken(jwtToken);
+            Field field = new Field(jsonObjectField.get("name").toString(), user);
+            Grade grade = new Grade(Double.parseDouble(jsonObjectField.get("lng").toString()),Double.parseDouble(jsonObjectField.get("lat").toString()) );
+            field.setGrade(grade);
+            if(user.getFields() == null){
+                ArrayList<Field> arrayList = new ArrayList<>();
+                arrayList.add(field);
+                user.setFields(arrayList);
+            }
+            else{
+                user.getFields().add(field);
+            }
+            userRepository.save(user);
+
+            return new ResponseEntity<String>( HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -111,5 +148,13 @@ public class FieldController {
         return arrayList;
     }
 
+    private User getUserFromToken(String jwtToken){
+        for(User u: userRepository.findAll()){
+            if(u.getJwtToken().equals(jwtToken)){
+                return u;
+            }
+        }
+        return null;
+    }
 
 }
