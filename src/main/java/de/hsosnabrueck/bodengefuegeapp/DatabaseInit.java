@@ -80,6 +80,7 @@ public class DatabaseInit {
             List<Crop> favCrops = new ArrayList<>();
             favCrops.add(cropRepository.findByName("Kartoffel"));
             favCrops.add(cropRepository.findByName("Mais"));
+            favCrops.add(cropRepository.findByName("Zwiebel"));
             user.setFavCrops(favCrops);
 
             userRepository.save(user);
